@@ -5,9 +5,9 @@ import 'package:task_sharing/features/shared/infrastructure/services/storage_ser
 
 class ListDatasourceImpl extends ListDatasource{
 
-  final Dio _dio;
+  // final Dio _dio;
 
-  ListDatasourceImpl(Dio dio) : _dio = dio;
+  ListDatasourceImpl(Dio dio) /**: _dio = dio */;
 
   @override
   Future<List<ShopItem>> getList([SKey? storageKey, String? token, String? groupId]) async {
