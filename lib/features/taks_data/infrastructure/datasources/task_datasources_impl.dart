@@ -19,10 +19,10 @@ class TaskDatasourceImpl extends TaskDatasource{
     try{
       final response = await _dio.get('last_week_mon.json');
       return TimeService.toDateTimeFormat(response.data);
-    }on DioException catch(e){
-      print(e);
+    }on DioException catch(_){
+      // print(e);
     }catch (e){
-      print(e);
+      // print(e);
     }
     return DateTime.now();
   }  //1)
@@ -39,7 +39,7 @@ class TaskDatasourceImpl extends TaskDatasource{
     }on DioException catch(_){
       // print(e);
     }catch (e){
-      print(e);
+      // print(e);
     }
   }  //1.1)
   
@@ -88,9 +88,12 @@ class TaskDatasourceImpl extends TaskDatasource{
   }  //3)
   
   @override
-  Future<void> updateSingleTask(Task task) async {
+  Future<void> updateSingleTask(Task task, String uid) async {
     try {
-      //TODO
+      _dio.patch(
+        'group/$uid.json',
+        data: task.toJson()
+      );
     }on DioException catch(_){
       // print(e);
     } catch (e) {

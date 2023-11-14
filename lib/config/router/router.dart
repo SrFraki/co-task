@@ -9,7 +9,6 @@ import 'package:task_sharing/features/shared/presentation/providers/dio_provider
 
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/list/presentation/providers/list_repository_provider.dart';
-import '../../features/list/presentation/providers/shop_list_provider.dart';
 import '../../features/shared/presentation/providers/storage_provider.dart';
 import '../../features/taks_data/presentation/providers/task_provider.dart';
 import '../../features/taks_data/presentation/providers/task_repository_provider.dart';
@@ -18,6 +17,7 @@ part 'router.g.dart';
 
 @riverpod
 GoRouter router(RouterRef ref) {
+// ignore: avoid_manual_providers_as_generated_provider_dependency
   final routerNotifier = ref.watch(routerNotifierProvider);
   return GoRouter(
     refreshListenable: routerNotifier,

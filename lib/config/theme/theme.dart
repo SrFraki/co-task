@@ -5,8 +5,11 @@ class ATheme{
   static get theme{
     return ThemeData(
       brightness: Brightness.dark,
-      colorSchemeSeed: const Color.fromARGB(255, 237, 214, 13),
+      colorSchemeSeed: const Color.fromARGB(255, 38, 224, 144),
+      // colorSchemeSeed: const Color.fromARGB(255, 237, 214, 13),
+      // colorSchemeSeed: Colors.deepPurple,
 
+      
       fontFamily: GoogleFonts.montserrat().fontFamily
 
     );

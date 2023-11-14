@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:task_sharing/config/router/router.dart';
 
 import 'config/theme/theme.dart';
@@ -22,11 +23,19 @@ class MainApp extends ConsumerWidget {
 
     final router = ref.watch(routerProvider);
 
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      
-      theme: ATheme.theme,
-      routerConfig: router,
+    return ScreenUtilInit(
+      designSize: const Size(1440, 3120),
+      minTextAdapt: true,
+      ensureScreenSize: true,
+      splitScreenMode: true,
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        
+        theme: ATheme.theme,
+        routerConfig: router,
+      ),
     );
+
+    // return M
   }
 }

@@ -12,7 +12,7 @@ part 'task_provider.g.dart';
 @Riverpod(keepAlive: true)
 class TaskP extends _$TaskP {
   @override
-  _TaskPState build() => _TaskPState();
+  TaskPState build() => TaskPState();
 
   Future<void> load() async {
     if(state.loadCompleted) return;
@@ -59,24 +59,25 @@ class TaskP extends _$TaskP {
 
   void toggleComplete(){
     state = state.copyWith(task: state.task.copyWith(isCompleted: !(state.task.isCompleted)));
-    ///TODO Update db
+    final String uid = ref.read(authProvider).uid;
+    ref.read(taskRepositoryProvider).updateSingleTask(state.task, uid);
   }
 }
 
 
-class _TaskPState{
+class TaskPState{
   bool loadCompleted;
   Task task;
 
-  _TaskPState({
+  TaskPState({
     this.loadCompleted = false,
     this.task = const Task()
   });
 
-  _TaskPState copyWith({
+  TaskPState copyWith({
     bool? loadCompleted,
     Task? task
-  }) => _TaskPState(
+  }) => TaskPState(
     loadCompleted: loadCompleted ?? this.loadCompleted,
     task: task ?? this.task,
   );

@@ -10,7 +10,7 @@ String _$taskPHash() => r'68f1e1d94e19c1da0607c036999b361e345ddd32';
 
 /// See also [TaskP].
 @ProviderFor(TaskP)
-final taskPProvider = NotifierProvider<TaskP, _TaskPState>.internal(
+final taskPProvider = NotifierProvider<TaskP, TaskPState>.internal(
   TaskP.new,
   name: r'taskPProvider',
   debugGetCreateSourceHash:
@@ -19,6 +19,6 @@ final taskPProvider = NotifierProvider<TaskP, _TaskPState>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef _$TaskP = Notifier<_TaskPState>;
+typedef _$TaskP = Notifier<TaskPState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

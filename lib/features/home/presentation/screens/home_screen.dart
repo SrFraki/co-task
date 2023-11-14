@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_sharing/features/home/presentation/providers/index_provider.dart';
-import 'package:task_sharing/features/taks_data/presentation/screens/task_data_screend.dart';
+import 'package:task_sharing/features/taks_data/presentation/screens/task_data_screen.dart';
 
+// import '../../../shared/presentation/widgets/custom_bottom_navigation_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -68,7 +69,7 @@ class _HomePageView extends ConsumerWidget {
     return PageView(
       controller: _controller,
       onPageChanged: (value) => ref.read(indexProvider.notifier).update((_) => value),
-      children: [
+      children: const[
         // ListScreen(),
         TaskDataScreen(),
         // SettingsScreen()
