@@ -8,7 +8,11 @@ part of 'group.dart';
 
 _$GroupImpl _$$GroupImplFromJson(Map<String, dynamic> json) => _$GroupImpl(
       group: (json['group'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, Task.fromJson(e as Map<String, dynamic>)),
+            (k, e) => MapEntry(
+                k,
+                (e as List<dynamic>)
+                    .map((e) => Task.fromJson(e as Map<String, dynamic>))
+                    .toList()),
           ) ??
           const {},
     );

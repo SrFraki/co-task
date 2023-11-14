@@ -21,7 +21,10 @@ Group _$GroupFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Group {
   @JsonKey(name: "group")
-  Map<String, Task> get group => throw _privateConstructorUsedError;
+  Map<String, List<Task>> get group => throw _privateConstructorUsedError;
+  @JsonKey(name: "group")
+  set group(Map<String, List<Task>> value) =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -33,7 +36,7 @@ abstract class $GroupCopyWith<$Res> {
   factory $GroupCopyWith(Group value, $Res Function(Group) then) =
       _$GroupCopyWithImpl<$Res, Group>;
   @useResult
-  $Res call({@JsonKey(name: "group") Map<String, Task> group});
+  $Res call({@JsonKey(name: "group") Map<String, List<Task>> group});
 }
 
 /// @nodoc
@@ -55,7 +58,7 @@ class _$GroupCopyWithImpl<$Res, $Val extends Group>
       group: null == group
           ? _value.group
           : group // ignore: cast_nullable_to_non_nullable
-              as Map<String, Task>,
+              as Map<String, List<Task>>,
     ) as $Val);
   }
 }
@@ -67,7 +70,7 @@ abstract class _$$GroupImplCopyWith<$Res> implements $GroupCopyWith<$Res> {
       __$$GroupImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({@JsonKey(name: "group") Map<String, Task> group});
+  $Res call({@JsonKey(name: "group") Map<String, List<Task>> group});
 }
 
 /// @nodoc
@@ -85,9 +88,9 @@ class __$$GroupImplCopyWithImpl<$Res>
   }) {
     return _then(_$GroupImpl(
       group: null == group
-          ? _value._group
+          ? _value.group
           : group // ignore: cast_nullable_to_non_nullable
-              as Map<String, Task>,
+              as Map<String, List<Task>>,
     ));
   }
 }
@@ -95,39 +98,19 @@ class __$$GroupImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$GroupImpl implements _Group {
-  const _$GroupImpl(
-      {@JsonKey(name: "group") final Map<String, Task> group = const {}})
-      : _group = group;
+  _$GroupImpl({@JsonKey(name: "group") this.group = const {}});
 
   factory _$GroupImpl.fromJson(Map<String, dynamic> json) =>
       _$$GroupImplFromJson(json);
 
-  final Map<String, Task> _group;
   @override
   @JsonKey(name: "group")
-  Map<String, Task> get group {
-    if (_group is EqualUnmodifiableMapView) return _group;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_group);
-  }
+  Map<String, List<Task>> group;
 
   @override
   String toString() {
     return 'Group(group: $group)';
   }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$GroupImpl &&
-            const DeepCollectionEquality().equals(other._group, _group));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_group));
 
   @JsonKey(ignore: true)
   @override
@@ -144,14 +127,16 @@ class _$GroupImpl implements _Group {
 }
 
 abstract class _Group implements Group {
-  const factory _Group(
-      {@JsonKey(name: "group") final Map<String, Task> group}) = _$GroupImpl;
+  factory _Group({@JsonKey(name: "group") Map<String, List<Task>> group}) =
+      _$GroupImpl;
 
   factory _Group.fromJson(Map<String, dynamic> json) = _$GroupImpl.fromJson;
 
   @override
   @JsonKey(name: "group")
-  Map<String, Task> get group;
+  Map<String, List<Task>> get group;
+  @JsonKey(name: "group")
+  set group(Map<String, List<Task>> value);
   @override
   @JsonKey(ignore: true)
   _$$GroupImplCopyWith<_$GroupImpl> get copyWith =>

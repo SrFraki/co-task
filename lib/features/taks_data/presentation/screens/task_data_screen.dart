@@ -22,12 +22,16 @@ class TaskDataScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _TaskCard(
-              task: state.task,
-              onPressed: ref.read(taskPProvider.notifier).toggleComplete,
-              width: 1.sw,
-              height: 0.9.sw,
-            ),
+            ListView.builder(
+              itemBuilder: (context, index) {
+                return _TaskCard(
+                  task: state.tasks[index],
+                  onPressed: () => ref.read(taskPProvider.notifier).toggleComplete(index),
+                  width: 1.sw,
+                  height: 0.9.sw,
+                );
+              },
+            )
           ],
         ),
       ),

@@ -22,10 +22,16 @@ Task _$TaskFromJson(Map<String, dynamic> json) {
 mixin _$Task {
   @JsonKey(name: "task")
   String get task => throw _privateConstructorUsedError;
+  @JsonKey(name: "task")
+  set task(String value) => throw _privateConstructorUsedError;
   @JsonKey(name: "isCompleted")
   bool get isCompleted => throw _privateConstructorUsedError;
+  @JsonKey(name: "isCompleted")
+  set isCompleted(bool value) => throw _privateConstructorUsedError;
   @JsonKey(includeFromJson: false, includeToJson: false)
   IconData? get icon => throw _privateConstructorUsedError;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  set icon(IconData? value) => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -124,7 +130,7 @@ class __$$TaskImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$TaskImpl implements _Task {
-  const _$TaskImpl(
+  _$TaskImpl(
       {@JsonKey(name: "task") this.task = '',
       @JsonKey(name: "isCompleted") this.isCompleted = false,
       @JsonKey(includeFromJson: false, includeToJson: false) this.icon});
@@ -134,33 +140,18 @@ class _$TaskImpl implements _Task {
 
   @override
   @JsonKey(name: "task")
-  final String task;
+  String task;
   @override
   @JsonKey(name: "isCompleted")
-  final bool isCompleted;
+  bool isCompleted;
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  final IconData? icon;
+  IconData? icon;
 
   @override
   String toString() {
     return 'Task(task: $task, isCompleted: $isCompleted, icon: $icon)';
   }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$TaskImpl &&
-            (identical(other.task, task) || other.task == task) &&
-            (identical(other.isCompleted, isCompleted) ||
-                other.isCompleted == isCompleted) &&
-            (identical(other.icon, icon) || other.icon == icon));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, task, isCompleted, icon);
 
   @JsonKey(ignore: true)
   @override
@@ -177,23 +168,29 @@ class _$TaskImpl implements _Task {
 }
 
 abstract class _Task implements Task {
-  const factory _Task(
-      {@JsonKey(name: "task") final String task,
-      @JsonKey(name: "isCompleted") final bool isCompleted,
+  factory _Task(
+      {@JsonKey(name: "task") String task,
+      @JsonKey(name: "isCompleted") bool isCompleted,
       @JsonKey(includeFromJson: false, includeToJson: false)
-      final IconData? icon}) = _$TaskImpl;
+      IconData? icon}) = _$TaskImpl;
 
   factory _Task.fromJson(Map<String, dynamic> json) = _$TaskImpl.fromJson;
 
   @override
   @JsonKey(name: "task")
   String get task;
+  @JsonKey(name: "task")
+  set task(String value);
   @override
   @JsonKey(name: "isCompleted")
   bool get isCompleted;
+  @JsonKey(name: "isCompleted")
+  set isCompleted(bool value);
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   IconData? get icon;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  set icon(IconData? value);
   @override
   @JsonKey(ignore: true)
   _$$TaskImplCopyWith<_$TaskImpl> get copyWith =>

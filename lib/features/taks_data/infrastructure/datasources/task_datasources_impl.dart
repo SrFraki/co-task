@@ -88,11 +88,11 @@ class TaskDatasourceImpl extends TaskDatasource{
   }  //3)
   
   @override
-  Future<void> updateSingleTask(Task task, String uid) async {
+  Future<void> updateSingleTask(List<Task> task, String uid) async {
     try {
       _dio.patch(
         'group/$uid.json',
-        data: task.toJson()
+        data: task.first.toJson()//TODO
       );
     }on DioException catch(_){
       // print(e);
@@ -102,17 +102,34 @@ class TaskDatasourceImpl extends TaskDatasource{
   } 
   
   @override
-  Future<Task> getSingleTask(String uid) async {
+  Future<List<Task>> getSingleTask(String uid) async {
     try {
       final response = await _dio.get(
         'group/$uid.json',
       );
-      return Task.fromJson(response.data);
+      return [Task.fromJson(response.data)]; //TODO
     }on DioException catch(_){
       // print(e);
     } catch (e) {
       // print(e);
     }
-    return const Task();
+    return [Task()]; //TODO
   } 
+
+
+  @override
+  Future<Group> getGroup() async {
+    try {
+      final response = await _dio.get(
+        'group.json',
+      );
+      return Group.fromJson(response.data);
+    }on DioException catch(_){
+      // print(e);
+    } catch (e) {
+      // print(e);
+    }
+
+    return Group(group: {});
+  }
 }

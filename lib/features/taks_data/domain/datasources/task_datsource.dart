@@ -11,6 +11,7 @@ abstract class TaskDatasource{
   Future<void> assignTasks(Group group); //3)
 
   
-  Future<void> updateSingleTask(Task task, String uid);
-  Future<Task> getSingleTask(String uid);
+  Future<void> updateSingleTask(List<Task> task, String uid);
+  Future<List<Task>> getSingleTask(String uid);
+  Future<Group> getGroup();
 }

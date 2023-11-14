@@ -4,9 +4,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'task.freezed.dart';
 part 'task.g.dart';
 
-@freezed
+@unfreezed
 class Task with _$Task {
-    const factory Task({
+    factory Task({
         @JsonKey(name: "task") @Default('')
         String task,
         @JsonKey(name: "isCompleted") @Default(false)

@@ -3,6 +3,7 @@ import 'package:task_sharing/config/constants/icons_consts.dart';
 import 'package:task_sharing/features/auth/presentation/providers/auth_provider.dart';
 import 'package:task_sharing/features/shared/infrastructure/services/time_service.dart';
 import 'package:task_sharing/features/taks_data/domain/models/group.dart';
+import 'package:task_sharing/features/taks_data/domain/models/tasks_and_uids.dart';
 import 'package:task_sharing/features/taks_data/presentation/providers/task_repository_provider.dart';
 
 import '../../domain/models/task.dart';
@@ -18,27 +19,45 @@ class TaskP extends _$TaskP {
     if(state.loadCompleted) return;
     state = state.copyWith(loadCompleted: true);
 
-    final DateTime db = await ref.read(taskRepositoryProvider).getLastWeekMon();
+    final DateTime dbDate = await ref.read(taskRepositoryProvider).getLastWeekMon();
     final String uid = ref.read(authProvider).uid;
-    Task? task;
+    List<Task>? task;
 
-    if(TimeService.compare(db, TimeService.lastWeekMon)){
+    if(TimeService.compare(dbDate, TimeService.lastWeekMon)){
       ///1) Rotar lista de tareas
-      final tasksAndUids = await ref.read(taskRepositoryProvider).getTasksAndUids();
+      TasksAndUids tasksAndUids = await ref.read(taskRepositoryProvider).getTasksAndUids();
       List<String> tasks = [...tasksAndUids.tasks];
-      final firstE = tasks.removeAt(0);
+      String firstE = tasks.removeAt(0);
       tasks.add(firstE);
       await ref.read(taskRepositoryProvider).updateTasks(tasks);
       
       ///2) Asignar tareas
-      Map<String, Task> g = <String, Task>{};
+      ///2.1) COMPROBAR NO COMPLETADOS
+      
+      final lastWeekGroup = await ref.read(taskRepositoryProvider).getGroup();
+      Group uidsPunished = Group();
+      lastWeekGroup.group.forEach((key, value) { 
+        List<Task> uncompletedTasks = [];
+        for (var element in value) { if(!element.isCompleted) uncompletedTasks.add(element); }
+        if(uncompletedTasks.isNotEmpty){
+          uidsPunished.group[key] = uncompletedTasks;
+        }
+      });
+
+      Map<String, List<Task>> g = <String, List<Task>>{};
       for(int i=0; i<tasksAndUids.tasks.length; i++){
-        g.addAll({tasksAndUids.uids[i]:Task(
-          task: tasksAndUids.tasks[i],
-          isCompleted: false
-        )});
+        final moreTasks = uidsPunished.group.containsKey(tasksAndUids.uids[i]) ? uidsPunished.group[tasksAndUids.uids[i]]! : <Task>[];
+        g.addAll({
+          tasksAndUids.uids[i]:[
+            Task(
+              task: tasksAndUids.tasks[i],
+              isCompleted: false
+            ),
+            ...moreTasks
+          ]
+        });
         if(tasksAndUids.uids[i] == uid){
-          task = Task(task: tasksAndUids.tasks[i], isCompleted: false);
+          task = [Task(task: tasksAndUids.tasks[i], isCompleted: false), ...moreTasks];
         }
       }
       await ref.read(taskRepositoryProvider).assignTasks(Group(group: g));
@@ -49,37 +68,41 @@ class TaskP extends _$TaskP {
       task = await ref.read(taskRepositoryProvider).getSingleTask(uid);
     }
 
-    // state.task = task ?? const Task(task: 'ERORR 404', isCompleted: true);
-    
-    state = state.copyWith(
-      task: task?.copyWith(icon: IconConstant.getIcon(task.task)) ?? Task(task: 'ERORR 404', isCompleted: true, icon: IconConstant.getIcon()),
-      loadCompleted: true
-    );
+
+    for (var element in task ?? []) {
+      element.icon = IconConstant.getIcon(element.task);
+    }
+    state = state.copyWith(tasks: task ?? [Task(task: 'ERROR 404', isCompleted: false, icon: IconConstant.getIcon())]);
   }
 
-  void toggleComplete(){
-    state = state.copyWith(task: state.task.copyWith(isCompleted: !(state.task.isCompleted)));
+  void toggleComplete(int index){
     final String uid = ref.read(authProvider).uid;
-    ref.read(taskRepositoryProvider).updateSingleTask(state.task, uid);
+    final auxTasks = state.tasks;
+    auxTasks[index] = Task(
+      task: auxTasks[index].task,
+      isCompleted: !(auxTasks[index].isCompleted),
+    );
+    state = state.copyWith(tasks: auxTasks);
+    ref.read(taskRepositoryProvider).updateSingleTask(state.tasks, uid);
   }
 }
 
 
 class TaskPState{
   bool loadCompleted;
-  Task task;
+  List<Task> tasks;
 
   TaskPState({
     this.loadCompleted = false,
-    this.task = const Task()
+    this.tasks = const[]
   });
 
   TaskPState copyWith({
     bool? loadCompleted,
-    Task? task
+    List<Task>? tasks
   }) => TaskPState(
     loadCompleted: loadCompleted ?? this.loadCompleted,
-    task: task ?? this.task,
+    tasks: tasks ?? this.tasks,
   );
 
 
