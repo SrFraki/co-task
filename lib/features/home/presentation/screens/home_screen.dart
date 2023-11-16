@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_sharing/features/home/presentation/providers/index_provider.dart';
 import 'package:task_sharing/features/taks_data/presentation/screens/task_data_screen.dart';
 
-// import '../../../shared/presentation/widgets/custom_bottom_navigation_bar.dart';
+import '../../../shared/presentation/widgets/custom_bottom_navigation_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

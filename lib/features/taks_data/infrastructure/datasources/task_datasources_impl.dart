@@ -90,9 +90,13 @@ class TaskDatasourceImpl extends TaskDatasource{
   @override
   Future<void> updateSingleTask(List<Task> task, String uid) async {
     try {
+      Map<String, dynamic> data = {};
+      for(int i=0; i<task.length; i++){
+        data['$i'] = task[i].toJson();
+      }
       _dio.patch(
         'group/$uid.json',
-        data: task.first.toJson()//TODO
+        data: data
       );
     }on DioException catch(_){
       // print(e);
@@ -107,13 +111,17 @@ class TaskDatasourceImpl extends TaskDatasource{
       final response = await _dio.get(
         'group/$uid.json',
       );
-      return [Task.fromJson(response.data)]; //TODO
+      List<Task> result = [];
+      for(var e in response.data){
+        result.add(Task.fromJson(e));
+      }
+      return result;
     }on DioException catch(_){
       // print(e);
     } catch (e) {
       // print(e);
     }
-    return [Task()]; //TODO
+    return [Task()];
   } 
 
 

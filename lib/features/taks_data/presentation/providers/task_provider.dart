@@ -31,8 +31,7 @@ class TaskP extends _$TaskP {
       tasks.add(firstE);
       await ref.read(taskRepositoryProvider).updateTasks(tasks);
       
-      ///2) Asignar tareas
-      ///2.1) COMPROBAR NO COMPLETADOS
+      ///2) COMPROBAR NO COMPLETADOS
       
       final lastWeekGroup = await ref.read(taskRepositoryProvider).getGroup();
       Group uidsPunished = Group();
@@ -44,30 +43,58 @@ class TaskP extends _$TaskP {
         }
       });
 
+      //TODO
+
+      ///3) ASIGNAR TAREAS
       Map<String, List<Task>> g = <String, List<Task>>{};
+
+      ///3) Asignar tareas
       for(int i=0; i<tasksAndUids.tasks.length; i++){
-        final moreTasks = uidsPunished.group.containsKey(tasksAndUids.uids[i]) ? uidsPunished.group[tasksAndUids.uids[i]]! : <Task>[];
         g.addAll({
-          tasksAndUids.uids[i]:[
+          tasksAndUids.uids[i]: [
             Task(
               task: tasksAndUids.tasks[i],
               isCompleted: false
-            ),
-            ...moreTasks
+            )
           ]
         });
-        if(tasksAndUids.uids[i] == uid){
-          task = [Task(task: tasksAndUids.tasks[i], isCompleted: false), ...moreTasks];
+      }
+
+      ///4) AÑADIR/QUITAR TAREAS
+      int cont = 0;
+      int index = 0;
+      String uidd = '';
+      for(int i=1; i<=tasksAndUids.tasks.length; i++){
+        index = i%tasksAndUids.tasks.length;
+        uidd = tasksAndUids.uids[(index-1)%tasksAndUids.tasks.length];
+        cont += uidsPunished.group[uidd]?.length ?? 0;
+        final moreTasks = uidsPunished.group.containsKey(tasksAndUids.uids[index]) ? uidsPunished.group[tasksAndUids.uids[index]]! : <Task>[];
+
+        if(cont > 0){
+          g[uidd]?.removeAt(0);
+          cont--;
+        }
+        g[uidd]?.addAll(moreTasks);
+      }
+
+      if(cont > 0){
+        index = 1;
+        while(cont > 0){
+          g[uidd]?.removeAt(0);
+          cont--;
+          index = (index+1)%tasksAndUids.tasks.length;
         }
       }
+
+      task = g[uid];
+      ///5) PETICION HTTP 
       await ref.read(taskRepositoryProvider).assignTasks(Group(group: g));
 
-      ///3) Acutalizar last_week
+      ///6) Acutalizar last_week
       await ref.read(taskRepositoryProvider).updateLastWeekMon(TimeService.lastWeekMon);
     }else{
       task = await ref.read(taskRepositoryProvider).getSingleTask(uid);
     }
-
 
     for (var element in task ?? []) {
       element.icon = IconConstant.getIcon(element.task);
@@ -78,10 +105,11 @@ class TaskP extends _$TaskP {
   void toggleComplete(int index){
     final String uid = ref.read(authProvider).uid;
     final auxTasks = state.tasks;
-    auxTasks[index] = Task(
-      task: auxTasks[index].task,
-      isCompleted: !(auxTasks[index].isCompleted),
-    );
+    auxTasks[index].isCompleted = !(auxTasks[index].isCompleted);
+    // auxTasks[index] = Task(
+    //   task: auxTasks[index].task,
+    //   isCompleted: !(auxTasks[index].isCompleted),
+    // );
     state = state.copyWith(tasks: auxTasks);
     ref.read(taskRepositoryProvider).updateSingleTask(state.tasks, uid);
   }

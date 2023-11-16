@@ -1,7 +1,7 @@
 name: task_sharing
 description: Gestión de tareas
 publish_to: "none"
-version: 0.1.0
+version: 1.0.0
 
 environment:
   sdk: ">=3.0.5 <4.0.0"
@@ -50,5 +50,5 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icons/app_icon.png"
+  image_path: "assets/icons/app_icon2.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
