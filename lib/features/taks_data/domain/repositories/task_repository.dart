@@ -11,6 +11,6 @@ abstract class TaskRepository{
 
   
   Future<void> updateSingleTask(List<Task> task, String uid);
-  Future<List<Task>> getSingleTask(String uid);
+  Future<List<Task>?> getSingleTask(String uid);
   Future<Group> getGroup();
 }

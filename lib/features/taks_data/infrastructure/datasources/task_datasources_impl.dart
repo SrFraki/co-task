@@ -106,7 +106,7 @@ class TaskDatasourceImpl extends TaskDatasource{
   } 
   
   @override
-  Future<List<Task>> getSingleTask(String uid) async {
+  Future<List<Task>?> getSingleTask(String uid) async {
     try {
       final response = await _dio.get(
         'group/$uid.json',
@@ -115,13 +115,14 @@ class TaskDatasourceImpl extends TaskDatasource{
       for(var e in response.data){
         result.add(Task.fromJson(e));
       }
+      if(result.isEmpty) return null;
       return result;
     }on DioException catch(_){
       // print(e);
     } catch (e) {
       // print(e);
     }
-    return [Task()];
+    return null;
   } 
 
 
@@ -131,6 +132,7 @@ class TaskDatasourceImpl extends TaskDatasource{
       final response = await _dio.get(
         'group.json',
       );
+
       return Group.fromJson(response.data);
     }on DioException catch(_){
       // print(e);

@@ -14,19 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-Group _$GroupFromJson(Map<String, dynamic> json) {
-  return _Group.fromJson(json);
-}
-
 /// @nodoc
 mixin _$Group {
-  @JsonKey(name: "group")
   Map<String, List<Task>> get group => throw _privateConstructorUsedError;
-  @JsonKey(name: "group")
   set group(Map<String, List<Task>> value) =>
       throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $GroupCopyWith<Group> get copyWith => throw _privateConstructorUsedError;
 }
@@ -36,7 +29,7 @@ abstract class $GroupCopyWith<$Res> {
   factory $GroupCopyWith(Group value, $Res Function(Group) then) =
       _$GroupCopyWithImpl<$Res, Group>;
   @useResult
-  $Res call({@JsonKey(name: "group") Map<String, List<Task>> group});
+  $Res call({Map<String, List<Task>> group});
 }
 
 /// @nodoc
@@ -70,7 +63,7 @@ abstract class _$$GroupImplCopyWith<$Res> implements $GroupCopyWith<$Res> {
       __$$GroupImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({@JsonKey(name: "group") Map<String, List<Task>> group});
+  $Res call({Map<String, List<Task>> group});
 }
 
 /// @nodoc
@@ -96,15 +89,12 @@ class __$$GroupImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
-class _$GroupImpl implements _Group {
-  _$GroupImpl({@JsonKey(name: "group") this.group = const {}});
 
-  factory _$GroupImpl.fromJson(Map<String, dynamic> json) =>
-      _$$GroupImplFromJson(json);
+class _$GroupImpl implements _Group {
+  _$GroupImpl({this.group = const {}});
 
   @override
-  @JsonKey(name: "group")
+  @JsonKey()
   Map<String, List<Task>> group;
 
   @override
@@ -117,25 +107,24 @@ class _$GroupImpl implements _Group {
   @pragma('vm:prefer-inline')
   _$$GroupImplCopyWith<_$GroupImpl> get copyWith =>
       __$$GroupImplCopyWithImpl<_$GroupImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$GroupImplToJson(
-      this,
-    );
-  }
+      
+        @override
+        Map<String, dynamic> toJson() {
+          final result = <String, dynamic>{};
+          for(String uid in group.keys){
+            result.addAll({
+              uid:group[uid]?.map((e) => e.toJson()).toList()
+            });
+          }
+          return {'group':result};
+        }
 }
 
 abstract class _Group implements Group {
-  factory _Group({@JsonKey(name: "group") Map<String, List<Task>> group}) =
-      _$GroupImpl;
-
-  factory _Group.fromJson(Map<String, dynamic> json) = _$GroupImpl.fromJson;
+  factory _Group({Map<String, List<Task>> group}) = _$GroupImpl;
 
   @override
-  @JsonKey(name: "group")
   Map<String, List<Task>> get group;
-  @JsonKey(name: "group")
   set group(Map<String, List<Task>> value);
   @override
   @JsonKey(ignore: true)

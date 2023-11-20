@@ -32,7 +32,7 @@ class TaskRepositoryImpl extends TaskRepository{
   Future<void> updateSingleTask(List<Task> task, String uid) => _d.updateSingleTask(task, uid); 
   
   @override
-  Future<List<Task>> getSingleTask(String uid) => _d.getSingleTask(uid); 
+  Future<List<Task>?> getSingleTask(String uid) => _d.getSingleTask(uid); 
 
   @override
   Future<Group> getGroup() => _d.getGroup();
