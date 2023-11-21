@@ -1,5 +1,7 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:task_sharing/features/shared/infrastructure/services/storage_service.dart';
 import 'package:task_sharing/features/shared/presentation/providers/storage_provider.dart';
@@ -50,12 +52,23 @@ class Auth extends _$Auth {
         uid: userCredential.user?.uid,
       );
       await storeInformation();
+
+      await requestPermission();
+
     } catch (e) {
       state = state.copyWith(
         status: AuthStatus.notAuth,
       );
     }
 
+  }
+
+  Future<void> requestPermission() async {
+    await Permission.notification.isDenied.then((value){
+      if(value){
+        Permission.notification.request();
+      }
+    });
   }
 
   Future<String?> refreshToken() async {

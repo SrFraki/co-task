@@ -102,10 +102,6 @@ class TaskP extends _$TaskP {
     final String uid = ref.read(authProvider).uid;
     final auxTasks = state.tasks;
     auxTasks[index].isCompleted = !(auxTasks[index].isCompleted);
-    // auxTasks[index] = Task(
-    //   task: auxTasks[index].task,
-    //   isCompleted: !(auxTasks[index].isCompleted),
-    // );
     state = state.copyWith(tasks: auxTasks);
     ref.read(taskRepositoryProvider).updateSingleTask(state.tasks, uid);
   }

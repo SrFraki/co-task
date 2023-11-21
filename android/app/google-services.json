@@ -1,18 +1,27 @@
 {
   "project_info": {
     "project_number": "1084759771003",
+    "firebase_url": "https://task-share-fec6e-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "task-share-fec6e",
     "storage_bucket": "task-share-fec6e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1084759771003:android:5cd81ff52ac6cf4c2edfde",
+        "mobilesdk_app_id": "1:1084759771003:android:fe5f980b2d2783c72edfde",
         "android_client_info": {
-          "package_name": "com.example.task_share"
+          "package_name": "com.FKSA.task_share"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "1084759771003-k2mmistuj3bkc4bs7i1k4i7ftrj183jj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.FKSA.task_share",
+            "certificate_hash": "f5c7458fc03d73f0c3dcd623fb6ea5f7e4b745ca"
+          }
+        },
         {
           "client_id": "1084759771003-25l0abcfkjt2emk6boji156jf1nro484.apps.googleusercontent.com",
           "client_type": 3
@@ -29,6 +38,13 @@
             {
               "client_id": "1084759771003-25l0abcfkjt2emk6boji156jf1nro484.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1084759771003-354835aii16pm1c4obtfkou0vldsjndh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.taskShare"
+              }
             }
           ]
         }

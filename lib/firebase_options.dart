@@ -51,9 +51,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAQnFxoADWzO8O5OX7mwv-srFy7f553CGQ',
-    appId: '1:1084759771003:android:5cd81ff52ac6cf4c2edfde',
+    appId: '1:1084759771003:android:fe5f980b2d2783c72edfde',
     messagingSenderId: '1084759771003',
     projectId: 'task-share-fec6e',
+    databaseURL: 'https://task-share-fec6e-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'task-share-fec6e.appspot.com',
   );
 
@@ -62,7 +63,9 @@ class DefaultFirebaseOptions {
     appId: '1:1084759771003:ios:73d12acf29631e6a2edfde',
     messagingSenderId: '1084759771003',
     projectId: 'task-share-fec6e',
+    databaseURL: 'https://task-share-fec6e-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'task-share-fec6e.appspot.com',
+    androidClientId: '1084759771003-k2mmistuj3bkc4bs7i1k4i7ftrj183jj.apps.googleusercontent.com',
     iosClientId: '1084759771003-354835aii16pm1c4obtfkou0vldsjndh.apps.googleusercontent.com',
     iosBundleId: 'com.example.taskShare',
   );
