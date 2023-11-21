@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:task_sharing/config/constants/constants.dart';
 import 'package:task_sharing/config/router/router_notifier.dart';
 import 'package:task_sharing/features/auth/presentation/screens/auth_screen.dart';
 import 'package:task_sharing/features/home/presentation/screens/home_screen.dart';
@@ -19,6 +22,7 @@ part 'router.g.dart';
 GoRouter router(RouterRef ref) {
 // ignore: avoid_manual_providers_as_generated_provider_dependency
   final routerNotifier = ref.watch(routerNotifierProvider);
+  bool loaded = false;
   return GoRouter(
     refreshListenable: routerNotifier,
     initialLocation: '/',
@@ -44,26 +48,29 @@ GoRouter router(RouterRef ref) {
       
 
       switch(authStatus){
-        case AuthStatus.loading: {
-          return '/';
-        }
+        case AuthStatus.loading: return '/';
         case AuthStatus.auth:{
-          await ref.read(dioServiceProvider.notifier).load();
-          ref.read(storagePProvider);
+          if(!loaded){
+            await ref.read(dioServiceProvider.notifier).load();
+            ref.read(storagePProvider);
 
-          //REPOSITORIES
-          ref.read(listRepositoryProvider);
-          ref.read(authProvider);
-          ref.read(taskRepositoryProvider);
-          
+            //REPOSITORIES
+            // ref.read(listRepositoryProvider);
+            ref.read(authProvider);
+            if(version != await ref.read(taskRepositoryProvider).getVersion()){
+              exit(0);
+            }
+            
 
-          //PROVIDERS LIST
-          // ref.read(shopListProvider(ShopListType.personal).notifier).load();
-          // ref.read(shopListProvider(ShopListType.shared).notifier).load();
-          await ref.read(taskPProvider.notifier).load();
+            //PROVIDERS LIST
+            // ref.read(shopListProvider(ShopListType.personal).notifier).load();
+            // ref.read(shopListProvider(ShopListType.shared).notifier).load();
+            await ref.read(taskPProvider.notifier).load();
 
-          // OTHER PROVIDERS
-          
+            // OTHER PROVIDERS
+            print('hehe');
+            loaded = true;
+          }
 
           return '/home';
         }

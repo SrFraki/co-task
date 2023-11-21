@@ -12,6 +12,9 @@ class TaskRepositoryImpl extends TaskRepository{
   TaskRepositoryImpl({
     required TaskDatasource datasource
   }) : _d = datasource;
+
+  @override
+  Future<String?> getVersion() => _d.getVersion();
   
   @override
   Future<DateTime> getLastWeekMon() => _d.getLastWeekMon();  //1)
@@ -36,5 +39,6 @@ class TaskRepositoryImpl extends TaskRepository{
 
   @override
   Future<Group> getGroup() => _d.getGroup();
+
 
 }

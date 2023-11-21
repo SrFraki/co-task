@@ -15,6 +15,14 @@ class TaskDatasourceImpl extends TaskDatasource{
   }) : _dio = dio;
 
   @override
+  Future<String?> getVersion() async{
+    try{
+      return (await _dio.get('version.json')).data;
+    }catch (_){}
+    return null;
+  }
+
+  @override
   Future<DateTime> getLastWeekMon() async {
     try{
       final response = await _dio.get('last_week_mon.json');
