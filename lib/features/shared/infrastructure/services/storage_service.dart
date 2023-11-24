@@ -54,6 +54,16 @@ class StorageService{
     await sp.remove(key.toString());
   }
 
+  Future<void> removeAllSecure() async {
+    while(true){
+      try {
+        await se.read(key: '');
+        break;
+      } catch (_) {await initialize();}
+    }
+    await se.deleteAll();
+  }
+
   Future<T?> read<T>(SKey key, [SMode mode = SMode.normal]) async {
     if(mode == SMode.secure && T == String){
       return await se.read(key: key.toString()) as T?;

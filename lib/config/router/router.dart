@@ -51,8 +51,8 @@ GoRouter router(RouterRef ref) {
         case AuthStatus.loading: return '/';
         case AuthStatus.auth:{
           if(!loaded){
+            await ref.read(storagePProvider).initialize();
             await ref.read(dioServiceProvider.notifier).load();
-            ref.read(storagePProvider);
 
             //REPOSITORIES
             // ref.read(listRepositoryProvider);

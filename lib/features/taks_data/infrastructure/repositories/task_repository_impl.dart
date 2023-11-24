@@ -14,6 +14,9 @@ class TaskRepositoryImpl extends TaskRepository{
   }) : _d = datasource;
 
   @override
+  Future<(List<String>, List<String>)?> getNames() => _d.getNames(); 
+
+  @override
   Future<String?> getVersion() => _d.getVersion();
   
   @override

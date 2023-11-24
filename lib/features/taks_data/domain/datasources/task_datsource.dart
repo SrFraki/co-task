@@ -16,4 +16,6 @@ abstract class TaskDatasource{
   Future<Group> getGroup();
 
   Future<String?> getVersion();
+
+  Future<(List<String>, List<String>)?> getNames(); 
 }

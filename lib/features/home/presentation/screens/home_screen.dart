@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_sharing/features/home/presentation/providers/index_provider.dart';
+import 'package:task_sharing/features/taks_data/presentation/screens/group_info_screen.dart';
 import 'package:task_sharing/features/taks_data/presentation/screens/task_data_screen.dart';
 
 import '../../../shared/presentation/widgets/custom_bottom_navigation_bar.dart';
@@ -19,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = PageController(initialPage: 1);
+    _controller = PageController(initialPage: 0);
   }
 
   @override
@@ -68,10 +69,12 @@ class _HomePageView extends ConsumerWidget {
 
     return PageView(
       controller: _controller,
-      onPageChanged: (value) => ref.read(indexProvider.notifier).update((_) => value),
-      children: const[
+      // onPageChanged: (value) => ref.read(indexPProvider.notifier).update(value),
+      scrollDirection: Axis.vertical,
+      children: [
         // ListScreen(),
-        TaskDataScreen(),
+        TaskDataScreen(pageController: _controller,),
+        const GroupInfoScreen()
         // SettingsScreen()
       ],
     );

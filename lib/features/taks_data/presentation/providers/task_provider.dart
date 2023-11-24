@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:task_sharing/config/constants/icons_consts.dart';
 import 'package:task_sharing/features/auth/presentation/providers/auth_provider.dart';
@@ -11,6 +12,7 @@ import 'package:task_sharing/features/taks_data/presentation/providers/task_repo
 import '../../domain/models/task.dart';
 
 part 'task_provider.g.dart';
+part 'task_provider.freezed.dart';
 
 @Riverpod(keepAlive: true)
 class TaskP extends _$TaskP {
@@ -80,6 +82,7 @@ class TaskP extends _$TaskP {
         
         task = g[uid];
         ///6) PETICION HTTP 
+        state = state.copyWith(group: Group(group: g));
         await ref.read(taskRepositoryProvider).assignTasks(Group(group: g));
 
       }
@@ -108,24 +111,34 @@ class TaskP extends _$TaskP {
 }
 
 
-class TaskPState{
-  bool loadCompleted;
-  List<Task> tasks;
 
-  TaskPState({
-    this.loadCompleted = false,
-    this.tasks = const[]
-  });
-
-  TaskPState copyWith({
-    bool? loadCompleted,
-    List<Task>? tasks
-  }) => TaskPState(
-    loadCompleted: loadCompleted ?? this.loadCompleted,
-    tasks: tasks ?? this.tasks,
-  );
-
-
+@unfreezed
+class TaskPState with _$TaskPState{
+  factory TaskPState({
+    @Default(false) bool loadCompleted,
+    @Default([]) List<Task> tasks,
+    Group? group
+  }) = _TaskPState;
 }
+// class TaskPState{
+//   bool loadCompleted;
+//   List<Task> tasks;
+//   Group group;
+
+//   TaskPState({
+//     this.loadCompleted = false,
+//     this.tasks = const[]
+//   });
+
+//   TaskPState copyWith({
+//     bool? loadCompleted,
+//     List<Task>? tasks
+//   }) => TaskPState(
+//     loadCompleted: loadCompleted ?? this.loadCompleted,
+//     tasks: tasks ?? this.tasks,
+//   );
+
+
+// }
 
 

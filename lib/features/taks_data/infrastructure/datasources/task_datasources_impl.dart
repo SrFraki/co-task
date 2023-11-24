@@ -23,6 +23,17 @@ class TaskDatasourceImpl extends TaskDatasource{
   }
 
   @override
+  Future<(List<String>, List<String>)?> getNames() async {
+    try {
+      final resp = await _dio.get('names.json');
+      final resp2 = await _dio.get('groups_uids.json');
+      return (List<String>.from(resp.data), List<String>.from(resp2.data)); 
+    } catch (_) {
+      return null;
+    }
+  } 
+
+  @override
   Future<DateTime> getLastWeekMon() async {
     try{
       final response = await _dio.get('last_week_mon.json');

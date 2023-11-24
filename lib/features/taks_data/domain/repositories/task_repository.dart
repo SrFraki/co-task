@@ -14,4 +14,6 @@ abstract class TaskRepository{
   Future<List<Task>?> getSingleTask(String uid);
   Future<Group> getGroup();
   Future<String?> getVersion();
+
+  Future<(List<String>, List<String>)?> getNames(); 
 }

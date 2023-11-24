@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -20,6 +19,7 @@ class Auth extends _$Auth {
   Future<void> listenToAuth() async {
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       if(user == null){
+        await ref.read(storagePProvider).removeAllSecure();
         state = state.copyWith(status: AuthStatus.notAuth);
       }else{
         state = state.copyWith(
@@ -51,11 +51,13 @@ class Auth extends _$Auth {
         token: userCredential.credential?.accessToken,
         uid: userCredential.user?.uid,
       );
+
       await storeInformation();
 
       await requestPermission();
 
     } catch (e) {
+      await ref.read(storagePProvider).removeAllSecure();
       state = state.copyWith(
         status: AuthStatus.notAuth,
       );
@@ -64,9 +66,9 @@ class Auth extends _$Auth {
   }
 
   Future<void> requestPermission() async {
-    await Permission.notification.isDenied.then((value){
+    await Permission.notification.isDenied.then((value) async {
       if(value){
-        Permission.notification.request();
+        await Permission.notification.request();
       }
     });
   }
