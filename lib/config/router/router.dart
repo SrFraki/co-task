@@ -8,6 +8,7 @@ import 'package:task_sharing/config/router/router_notifier.dart';
 import 'package:task_sharing/features/auth/presentation/screens/auth_screen.dart';
 import 'package:task_sharing/features/home/presentation/screens/home_screen.dart';
 import 'package:task_sharing/features/loading/presentation/screens/loading_screen.dart';
+import 'package:task_sharing/features/loading/presentation/screens/new_version_aviable_screen.dart';
 import 'package:task_sharing/features/shared/presentation/providers/dio_provider.dart';
 
 import '../../features/auth/presentation/providers/auth_provider.dart';
@@ -22,6 +23,7 @@ part 'router.g.dart';
 GoRouter router(RouterRef ref) {
 // ignore: avoid_manual_providers_as_generated_provider_dependency
   final routerNotifier = ref.watch(routerNotifierProvider);
+  bool existsNewVersion = false;
   bool loaded = false;
   return GoRouter(
     refreshListenable: routerNotifier,
@@ -41,6 +43,11 @@ GoRouter router(RouterRef ref) {
         path: '/home',
         pageBuilder: (context, state) => _pageBuilder(context, state, const HomeScreen()),
       ),
+
+      GoRoute(
+        path: '/new_version',
+        pageBuilder: (context, state) => _pageBuilder(context, state, const NewVersionAviableScreen()),
+      ),
     ],
     redirect: (context, state) async {
       final authStatus = routerNotifier.authStatus;
@@ -57,20 +64,18 @@ GoRouter router(RouterRef ref) {
             //REPOSITORIES
             // ref.read(listRepositoryProvider);
             ref.read(authProvider);
-            if(version != await ref.read(taskRepositoryProvider).getVersion()){
-              exit(0);
-            }
-            
-
-            //PROVIDERS LIST
-            // ref.read(shopListProvider(ShopListType.personal).notifier).load();
-            // ref.read(shopListProvider(ShopListType.shared).notifier).load();
-            await ref.read(taskPProvider.notifier).load();
-
-            // OTHER PROVIDERS
-            print('hehe');
+            existsNewVersion = version != await ref.read(taskRepositoryProvider).getVersion();   
             loaded = true;
           }
+
+          if(existsNewVersion) return '/new_version';  
+          
+          //PROVIDERS LIST
+          // ref.read(shopListProvider(ShopListType.personal).notifier).load();
+          // ref.read(shopListProvider(ShopListType.shared).notifier).load();
+          await ref.read(taskPProvider.notifier).load();
+
+          // OTHER PROVIDERS
 
           return '/home';
         }

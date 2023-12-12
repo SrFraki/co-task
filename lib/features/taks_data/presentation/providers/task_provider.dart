@@ -64,7 +64,7 @@ class TaskP extends _$TaskP {
         for(int i=0; i<tasksAndUids.tasks.length; i++){
           g[tasksAndUids.uids[i]] = [Task(
             task: tasks[i],
-            isCompleted: tasks[i] == 'COMPRAR' //TODO
+            isCompleted: false
           )];
         }
 

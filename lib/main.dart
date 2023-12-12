@@ -31,12 +31,9 @@ Future<void> main() async {
 
   runApp(const ProviderScope(child: MainApp()));
 
-  ///TODO Control de versiones
-  ///   Añadir variable versión tanto local como en db
   ///TODO Sistema de notificaciones
   ///*   - Notificación semanal (Cada lunes)
   ///   - Un dispositivo envie notis a otros
-  ///TODO Mostar tareas completadas
 }
 
 class MainApp extends ConsumerWidget {

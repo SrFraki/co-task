@@ -34,7 +34,6 @@ class GroupP extends _$GroupP {
     for(int i=0; i<names.$1.length; i++){
       result[names.$2[i]] = names.$1[i];
     }
-    print(names.$2);
     state = state.copyWith(names: result);
   }
 
