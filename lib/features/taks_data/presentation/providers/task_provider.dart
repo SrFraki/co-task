@@ -7,6 +7,7 @@ import 'package:task_sharing/features/auth/presentation/providers/auth_provider.
 import 'package:task_sharing/features/shared/infrastructure/services/time_service.dart';
 import 'package:task_sharing/features/taks_data/domain/models/group.dart';
 import 'package:task_sharing/features/taks_data/domain/models/tasks_and_uids.dart';
+import 'package:task_sharing/features/taks_data/presentation/providers/group_provider.dart';
 import 'package:task_sharing/features/taks_data/presentation/providers/task_repository_provider.dart';
 
 import '../../domain/models/task.dart';
@@ -96,12 +97,13 @@ class TaskP extends _$TaskP {
       element.icon = IconConstant.getIcon(element.task);
     }
     if(task == null || task.isEmpty) task = [Task(task: "VACACIONES", isCompleted: true, icon: IconConstant.getIcon("VACACIONES"))]; 
+    ref.read(groupPProvider);
     state = state.copyWith(tasks: task);
   }
 
   void toggleComplete(int index){
     if(state.tasks.first.task == 'VACACIONES') return;
-    if(state.tasks.first.task == 'COMPRAR') return; //TODO
+    // if(state.tasks.first.task == 'COMPRAR') return; //TODO
     final String uid = ref.read(authProvider).uid;
     final auxTasks = state.tasks;
     auxTasks[index].isCompleted = !(auxTasks[index].isCompleted);

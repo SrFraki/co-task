@@ -156,8 +156,9 @@ class _TaskCard extends StatelessWidget {
 
     return Card(
       margin: EdgeInsets.zero,
-      elevation: 1,
+      elevation: 10,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      color: const Color.fromARGB(255, 28, 28, 28),
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [

@@ -23,7 +23,7 @@ class _GroupInfoScreenState extends ConsumerState<GroupInfoScreen> {
   void initState() {
     super.initState();
     _timer = Timer.periodic(
-      const Duration(seconds: 15), 
+      const Duration(seconds: 4), 
       (timer) async => await ref.read(groupPProvider.notifier).init()
     );
   }

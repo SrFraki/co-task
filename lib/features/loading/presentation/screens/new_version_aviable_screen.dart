@@ -10,7 +10,7 @@ class NewVersionAviableScreen extends StatelessWidget {
     return Scaffold(
       body: Center(
          child: Text(
-          'New version avaiable',
+          'New version available',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontFamily: GoogleFonts.nunito().fontFamily,
