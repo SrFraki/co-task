@@ -10,7 +10,7 @@ class ATheme{
   static get themeLight{
     return ThemeData(
       brightness: Brightness.light,
-      colorSchemeSeed: const Color.fromARGB(255, 38, 38, 38),
+      // colorSchemeSeed: Color.fromARGB(255, 107, 99, 99),
       // colorSchemeSeed: const Color.fromARGB(255, 237, 214, 13),
       // colorSchemeSeed: Colors.deepPurple,
       fontFamily: GoogleFonts.montserrat().fontFamily,
@@ -19,7 +19,7 @@ class ATheme{
         titleTextStyle: GoogleFonts.montserrat().copyWith(color: Colors.black),
       ),
 
-      cardColor: Colors.grey.shade100,
+      cardTheme: CardTheme(surfaceTintColor: Colors.grey.shade400)
     );
   }
 
@@ -40,8 +40,7 @@ class ATheme{
 
 
 
-      cardColor: const Color.fromARGB(255, 41, 41, 41),
-      
+      cardTheme: const CardTheme(surfaceTintColor: Color.fromARGB(255, 31, 31, 31))
     );
   }
 }

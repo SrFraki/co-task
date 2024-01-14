@@ -1,4 +1,8 @@
 
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
@@ -36,8 +40,8 @@ GoRouter router(RouterRef ref) {
       ),
 
       GoRoute(
-        path: '/new_version/:link',
-        pageBuilder: (context, state) => _pageBuilder(context, state, NewVersionScreen(link: state.pathParameters['link'] ?? '',)),
+        path: '/new_version',
+        pageBuilder: (context, state) => _pageBuilder(context, state, NewVersionScreen(state.uri.queryParameters['link'] ?? 'ERROR')),
       ),
     ],
     redirect: (context, state) async {
@@ -52,10 +56,11 @@ GoRouter router(RouterRef ref) {
 
             final versionData = await ref.read(taskRepositoryProvider).getVersion();
             if(versionData != null){
-              final versionList = versionData.split('/');
+              final versionList = versionData.split('-*-');
               if(versionList.first != version){
                 FlutterNativeSplash.remove();
-                return '/new_version/${versionList.last}';
+                return Uri(path: '/new_version', queryParameters: {'link':versionList.last}).toString();
+                // return '/new_version/${versionList.last}';
               }
             }
             

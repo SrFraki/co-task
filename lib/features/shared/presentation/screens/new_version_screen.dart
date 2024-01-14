@@ -1,14 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NewVersionScreen extends StatelessWidget {
    
-  const NewVersionScreen({Key? key, required this.link}) : super(key: key);
+  const NewVersionScreen(this.link, {Key? key}) : super(key: key);
 
   final String link;
-  
+
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       body: SizedBox.expand(
         child: Column(
@@ -34,6 +38,7 @@ class NewVersionScreen extends StatelessWidget {
             if(link != '')
               TextButton(
                 onPressed: (){
+                  log(link);
                   launchUrl(Uri.parse(link));
                 }, 
                 style: TextButton.styleFrom(

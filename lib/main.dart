@@ -11,14 +11,14 @@ import 'config/theme/theme.dart';
 import 'firebase_options.dart';
 
 
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+// @pragma('vm:entry-point')
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   // If you're going to use other Firebase services in the background, such as Firestore,
+//   // make sure you call `initializeApp` before using other Firebase services.
+//   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // print("Handling a background message");
-}
+//   // print("Handling a background message");
+// }
 
 
 
@@ -30,7 +30,7 @@ Future<void> main() async {
   FlutterNativeSplash.preserve(widgetsBinding: wb);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runApp(const ProviderScope(child: MainApp()));
 
