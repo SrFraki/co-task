@@ -4,6 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:task_sharing/features/shared/infrastructure/services/storage_service.dart';
 import 'package:task_sharing/features/shared/presentation/providers/storage_provider.dart';
+import 'package:task_sharing/features/tasks/presentation/providers/tasks_provider.dart';
 
 part 'auth_provider.g.dart';
 
@@ -19,8 +20,7 @@ class Auth extends _$Auth {
   Future<void> listenToAuth() async {
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       if(user == null){
-        await ref.read(storagePProvider).removeAllSecure();
-        state = state.copyWith(status: AuthStatus.notAuth);
+        logout();
       }else{
         state = state.copyWith(
           status: AuthStatus.auth,
@@ -46,21 +46,27 @@ class Auth extends _$Auth {
 
       final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
 
+      User? user = FirebaseAuth.instance.currentUser;
+      if(user == null){
+        logout();
+        return;
+      }
+
+      final token = await user.getIdToken();
+
       state = state.copyWith(
         status: AuthStatus.auth,
-        token: userCredential.credential?.accessToken,
+        token: token,
         uid: userCredential.user?.uid,
       );
 
       await storeInformation();
 
-      await requestPermission();
+      // await requestPermission();
+      ref.read(tasksPProvider.notifier).init();
 
-    } catch (e) {
-      await ref.read(storagePProvider).removeAllSecure();
-      state = state.copyWith(
-        status: AuthStatus.notAuth,
-      );
+    } catch (_) {
+      logout();
     }
 
   }
@@ -83,6 +89,12 @@ class Auth extends _$Auth {
 
   Future<void> storeInformation() async {
     await ref.read(storagePProvider).upload<String>(SKey.accessToken, state.token, SMode.secure);
+  }
+
+  Future<void> logout() async {
+    await ref.read(storagePProvider).removeAllSecure();
+    FirebaseAuth.instance.signOut();
+    state = state.copyWith(status: AuthStatus.notAuth);
   }
 
 }

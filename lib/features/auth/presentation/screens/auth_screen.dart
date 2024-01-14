@@ -7,31 +7,30 @@ class AuthScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
-    final colors = Theme.of(context).colorScheme;
-    
     return Scaffold(
       body: Center(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(50),
-          child: TextButton(
-            onPressed: (){
-              ref.read(authProvider.notifier).signInWithGoogle();
-            },
-            style: TextButton.styleFrom(
-              padding: EdgeInsets.zero,
-            ),
-            child: Container(
-              width: 100,
-              height: 100,
-              color: colors.secondary.withOpacity(0.1),
-              child: const ImageIcon(
-                AssetImage('assets/icons/google.png'),
-                color: Colors.white,
-              ),
+        child: TextButton.icon(
+          onPressed: () => ref.read(authProvider.notifier).signInWithGoogle(), 
+          icon: const ImageIcon(
+            AssetImage('assets/icons/google.png'),
+            color: Colors.black,
+            size: 40,
+          ),
+          label: const Text(
+            'Sign In',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 22,
+              fontWeight: FontWeight.bold
             ),
           ),
-        )
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.grey.shade200,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            padding: const EdgeInsets.fromLTRB(10,10,20,10),
+            elevation: 3
+          ),
+        ),
       ),
     );
   }

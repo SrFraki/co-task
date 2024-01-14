@@ -1,21 +1,19 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:task_sharing/config/constants/constants.dart';
 import 'package:task_sharing/config/router/router_notifier.dart';
 import 'package:task_sharing/features/auth/presentation/screens/auth_screen.dart';
-import 'package:task_sharing/features/home/presentation/screens/home_screen.dart';
-import 'package:task_sharing/features/loading/presentation/screens/loading_screen.dart';
-import 'package:task_sharing/features/loading/presentation/screens/new_version_aviable_screen.dart';
 import 'package:task_sharing/features/shared/presentation/providers/dio_provider.dart';
+import 'package:task_sharing/features/shared/presentation/screens/new_version_screen.dart';
+import 'package:task_sharing/features/tasks/presentation/providers/task_repository_provider.dart';
+import 'package:task_sharing/features/tasks/presentation/providers/tasks_provider.dart';
+import 'package:task_sharing/features/tasks/presentation/screens/tasks_screen.dart';
 
 import '../../features/auth/presentation/providers/auth_provider.dart';
-import '../../features/list/presentation/providers/list_repository_provider.dart';
 import '../../features/shared/presentation/providers/storage_provider.dart';
-import '../../features/taks_data/presentation/providers/task_provider.dart';
-import '../../features/taks_data/presentation/providers/task_repository_provider.dart';
 
 part 'router.g.dart';
 
@@ -23,36 +21,27 @@ part 'router.g.dart';
 GoRouter router(RouterRef ref) {
 // ignore: avoid_manual_providers_as_generated_provider_dependency
   final routerNotifier = ref.watch(routerNotifierProvider);
-  bool existsNewVersion = false;
   bool loaded = false;
   return GoRouter(
     refreshListenable: routerNotifier,
     initialLocation: '/',
     routes: [
       GoRoute(
-        path: '/',
-        pageBuilder: (context, state) => _pageBuilder(context, state, const LoadingScreen()),
-      ),
-
-      GoRoute(
         path: '/auth',
         pageBuilder: (context, state) => _pageBuilder(context, state, const AuthScreen()),
       ),
-
       GoRoute(
-        path: '/home',
-        pageBuilder: (context, state) => _pageBuilder(context, state, const HomeScreen()),
+        path: '/',
+        pageBuilder: (context, state) => _pageBuilder(context, state, const TasksScreen()),
       ),
 
       GoRoute(
-        path: '/new_version',
-        pageBuilder: (context, state) => _pageBuilder(context, state, const NewVersionAviableScreen()),
+        path: '/new_version/:link',
+        pageBuilder: (context, state) => _pageBuilder(context, state, NewVersionScreen(link: state.pathParameters['link'] ?? '',)),
       ),
     ],
     redirect: (context, state) async {
       final authStatus = routerNotifier.authStatus;
-      // final goingTo = state.matchedLocation;
-      
 
       switch(authStatus){
         case AuthStatus.loading: return '/';
@@ -61,23 +50,20 @@ GoRouter router(RouterRef ref) {
             await ref.read(storagePProvider).initialize();
             await ref.read(dioServiceProvider.notifier).load();
 
-            //REPOSITORIES
-            // ref.read(listRepositoryProvider);
+            final versionData = await ref.read(taskRepositoryProvider).getVersion();
+            if(versionData != null){
+              final versionList = versionData.split('/');
+              if(versionList.first != version){
+                FlutterNativeSplash.remove();
+                return '/new_version/${versionList.last}';
+              }
+            }
+            
+            ref.read(tasksPProvider.notifier).init();
             ref.read(authProvider);
-            existsNewVersion = version != await ref.read(taskRepositoryProvider).getVersion();   
             loaded = true;
           }
-
-          if(existsNewVersion) return '/new_version';  
-          
-          //PROVIDERS LIST
-          // ref.read(shopListProvider(ShopListType.personal).notifier).load();
-          // ref.read(shopListProvider(ShopListType.shared).notifier).load();
-          await ref.read(taskPProvider.notifier).load();
-
-          // OTHER PROVIDERS
-
-          return '/home';
+          return '/';
         }
         case AuthStatus.notAuth:{
           return '/auth';

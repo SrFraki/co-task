@@ -1,34 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ATheme{
-  static get theme{
+  static get darkMode{
+    return SchedulerBinding.instance.platformDispatcher.platformBrightness == Brightness.dark;
+  }
+
+  static get themeLight{
     return ThemeData(
-      brightness: Brightness.dark,
-      colorSchemeSeed: const Color.fromARGB(255, 38, 224, 144),
+      brightness: Brightness.light,
+      colorSchemeSeed: const Color.fromARGB(255, 38, 38, 38),
       // colorSchemeSeed: const Color.fromARGB(255, 237, 214, 13),
       // colorSchemeSeed: Colors.deepPurple,
+      fontFamily: GoogleFonts.montserrat().fontFamily,
+
+      appBarTheme: AppBarTheme(
+        titleTextStyle: GoogleFonts.montserrat().copyWith(color: Colors.black),
+      ),
+
+      cardColor: Colors.grey.shade100,
+    );
+  }
+
+  static get themeDark{
+    return ThemeData(
+      brightness: Brightness.dark,
+
+      scaffoldBackgroundColor: const Color.fromARGB(255, 36, 36, 36),
+      
+      
+      fontFamily: GoogleFonts.montserrat().fontFamily,
+
 
       
-      fontFamily: GoogleFonts.montserrat().fontFamily
+      appBarTheme: AppBarTheme(
+        titleTextStyle: GoogleFonts.montserrat().copyWith(color: Colors.white.withOpacity(0.9)),
+      ),
 
+
+
+      cardColor: const Color.fromARGB(255, 41, 41, 41),
+      
     );
   }
 }
-
-/**
- * 'strikemaster': {
-  *  '50': '#f9f6f9',
-  *  '100': '#f4eff3',
-  *  '200': '#ebdfe8',
-  *  '300': '#dbc6d5',
-  *  '400': '#c3a3bb',
-  *  '500': '#af85a3',
-  *  '600': '#8d627e',
-  *  '700': '#805670',
-  *  '800': '#6b495e',
-  *  '900': '#5b4051',
-  *  '950': '#35222e',
-  *},
-*
- */

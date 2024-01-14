@@ -23,7 +23,6 @@ class DioService extends _$DioService {
         queryParameters: {
           'auth':token
         },
-        receiveTimeout: const Duration(seconds: 2)
       )
     );
 
@@ -55,7 +54,6 @@ class DioService extends _$DioService {
             return handler.resolve(response);
           }
           return handler.next(e);
-          // TODO Si el error es de conexion, lanzar error (ns)
         },
       )
     ]);
