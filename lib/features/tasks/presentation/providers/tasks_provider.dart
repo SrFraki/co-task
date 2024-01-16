@@ -63,6 +63,10 @@ class TasksP extends _$TasksP {
 
     FlutterNativeSplash.remove();
 
+    ref.read(taskRepositoryProvider).listener().listen((event) {
+      updateChanges(event);
+    });
+
   }
 
 

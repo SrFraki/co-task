@@ -63,6 +63,7 @@ class TaskDatasourceImpl {
         if(data['path'] == '/') continue;
 
         final listKey = (data['path'] as String).split('/')..removeAt(0);
+        log(data.toString());
         if(listKey.length > 1){
           yield (int.parse(listKey.first), int.parse(listKey.last), data['data']);
         }else{

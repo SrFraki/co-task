@@ -55,24 +55,8 @@ class TasksScreenView extends ConsumerStatefulWidget {
 class _TasksScreenViewState extends ConsumerState<TasksScreenView> {
   
   int page = 0;
-  late StreamSubscription<(int, int, bool)> stream;
+ 
 
-  @override
-  void initState() {
-    super.initState();
-    stream = ref.read(taskRepositoryProvider).listener().listen((event) {
-      ref.read(tasksPProvider.notifier).updateChanges(event);
-    });
-  }
-
-
-  @override
-  void dispose() {
-    stream.cancel();
-    super.dispose();
-  }
-
-  
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(tasksPProvider);
@@ -121,15 +105,18 @@ class _TasksScreenViewState extends ConsumerState<TasksScreenView> {
       
           const SizedBox(height: 15,),
 
-          Column(
-            children: [
-              for(int i=0; i<state.simplifiedList.length; i++)
-                UsersTaskInfo(
-                  name: state.names[state.simplifiedList[i]],
-                  task: state.tasks[state.simplifiedList[i]],
-                  isCompleted: state.areCompleted[state.simplifiedList[i]],
-                ),
-            ],
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+            child: Column(
+              children: [
+                for(int i=0; i<state.simplifiedList.length; i++)
+                  UsersTaskInfo(
+                    name: state.names[state.simplifiedList[i]],
+                    task: state.tasks[state.simplifiedList[i]],
+                    isCompleted: state.areCompleted[state.simplifiedList[i]],
+                  ),
+              ],
+            ),
           )
       
           // Expanded(
