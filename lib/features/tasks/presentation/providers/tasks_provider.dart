@@ -36,7 +36,7 @@ class TasksP extends _$TasksP {
     List<List<bool>> areCompleted = [];
     List<int> simplifiedList = [];
     final uid = ref.read(authProvider).uid;
-    int pos = 1;
+    int pos = -1;
     
 
     //TODO: get stored POS, else:
@@ -44,7 +44,7 @@ class TasksP extends _$TasksP {
       if(value.contains(uid)){
         pos = listKey;
       }
-      names.add(value.split('/').last);
+      names.add(value.split('-').first);
       tasks.add(data.tasks[listKey].where((e) => e != '__null__').toList());
       areCompleted.add(data.areCompleted[listKey].where((e) => e != '__null__').map((e) => e == true).toList());
       if(tasks[listKey].isNotEmpty) simplifiedList.add(listKey);

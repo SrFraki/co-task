@@ -17,7 +17,6 @@ import 'package:task_sharing/features/tasks/presentation/providers/tasks_provide
 import 'package:task_sharing/features/tasks/presentation/screens/tasks_screen.dart';
 
 import '../../features/auth/presentation/providers/auth_provider.dart';
-import '../../features/shared/presentation/providers/storage_provider.dart';
 
 part 'router.g.dart';
 
@@ -51,7 +50,6 @@ GoRouter router(RouterRef ref) {
         case AuthStatus.loading: return '/';
         case AuthStatus.auth:{
           if(!loaded){
-            await ref.read(storagePProvider).initialize();
             await ref.read(dioServiceProvider.notifier).load();
 
             final versionData = await ref.read(taskRepositoryProvider).getVersion();

@@ -1,18 +1,22 @@
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:task_sharing/features/shared/infrastructure/services/storage_service.dart';
-import 'package:task_sharing/features/shared/presentation/providers/storage_provider.dart';
 import 'package:task_sharing/features/tasks/presentation/providers/tasks_provider.dart';
 
 part 'auth_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class Auth extends _$Auth {
+
+// ignore: avoid_public_notifier_properties
+  late StorageServ storage;
   
   @override
   AuthState build() {
+    storage = StorageServ(true);
     listenToAuth();
     return AuthState();
   }
@@ -20,7 +24,7 @@ class Auth extends _$Auth {
   Future<void> listenToAuth() async {
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       if(user == null){
-        logout();
+        if(state.status != AuthStatus.notAuth) logout();
       }else{
         state = state.copyWith(
           status: AuthStatus.auth,
@@ -46,17 +50,10 @@ class Auth extends _$Auth {
 
       final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
 
-      User? user = FirebaseAuth.instance.currentUser;
-      if(user == null){
-        logout();
-        return;
-      }
-
-      final token = await user.getIdToken();
 
       state = state.copyWith(
         status: AuthStatus.auth,
-        token: token,
+        token: userCredential.credential?.accessToken ?? '',
         uid: userCredential.user?.uid,
       );
 
@@ -88,13 +85,14 @@ class Auth extends _$Auth {
 
 
   Future<void> storeInformation() async {
-    await ref.read(storagePProvider).upload<String>(SKey.accessToken, state.token, SMode.secure);
+    await storage.write(StorageKey.token.toString(), state.token);
   }
 
   Future<void> logout() async {
-    await ref.read(storagePProvider).removeAllSecure();
+    await storage.deleteAll();
     FirebaseAuth.instance.signOut();
     state = state.copyWith(status: AuthStatus.notAuth);
+    FlutterNativeSplash.remove();
   }
 
 }
