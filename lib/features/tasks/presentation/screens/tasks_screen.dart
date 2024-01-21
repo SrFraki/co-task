@@ -1,11 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 import 'package:task_sharing/config/theme/theme.dart';
 import 'package:task_sharing/features/auth/presentation/providers/auth_provider.dart';
-import 'package:task_sharing/features/tasks/presentation/providers/task_repository_provider.dart';
 import 'package:task_sharing/features/tasks/presentation/providers/tasks_provider.dart';
 import 'package:task_sharing/features/tasks/presentation/widgets/task_card.dart';
 
