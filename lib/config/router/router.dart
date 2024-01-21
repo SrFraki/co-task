@@ -1,13 +1,8 @@
-
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:task_sharing/config/constants/constants.dart';
 import 'package:task_sharing/config/router/router_notifier.dart';
 import 'package:task_sharing/features/auth/presentation/screens/auth_screen.dart';
 import 'package:task_sharing/features/shared/presentation/providers/dio_provider.dart';
@@ -55,7 +50,8 @@ GoRouter router(RouterRef ref) {
             final versionData = await ref.read(taskRepositoryProvider).getVersion();
             if(versionData != null){
               final versionList = versionData.split('-*-');
-              if(versionList.first != version){
+              final version = await PackageInfo.fromPlatform();
+              if(versionList.first != version.version){
                 FlutterNativeSplash.remove();
                 return Uri(path: '/new_version', queryParameters: {'link':versionList.last}).toString();
                 // return '/new_version/${versionList.last}';

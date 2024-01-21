@@ -39,14 +39,13 @@ class TasksP extends _$TasksP {
     int pos = -1;
     
 
-    //TODO: get stored POS, else:
     data.namesAndUids.asMap().forEach((listKey, value) {
       if(value.contains(uid)){
         pos = listKey;
       }
       names.add(value.split('-').first);
       tasks.add(data.tasks[listKey].where((e) => e != '__null__').toList());
-      areCompleted.add(data.areCompleted[listKey].where((e) => e != '__null__').map((e) => e == true).toList());
+      areCompleted.add(data.areCompleted[listKey].where((e) => e != '__null__').map((e) => '$e'.toLowerCase() == "true").toList());
       if(tasks[listKey].isNotEmpty) simplifiedList.add(listKey);
     });
 
