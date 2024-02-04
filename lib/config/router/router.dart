@@ -15,7 +15,7 @@ import '../../features/auth/presentation/providers/auth_provider.dart';
 
 part 'router.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 GoRouter router(RouterRef ref) {
 // ignore: avoid_manual_providers_as_generated_provider_dependency
   final routerNotifier = ref.watch(routerNotifierProvider);
@@ -61,6 +61,7 @@ GoRouter router(RouterRef ref) {
             ref.read(tasksPProvider.notifier).init();
             ref.read(authProvider);
             loaded = true;
+            FlutterNativeSplash.remove();
           }
           return '/';
         }

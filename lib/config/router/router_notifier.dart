@@ -4,6 +4,7 @@ import 'package:task_sharing/features/auth/presentation/providers/auth_provider.
 
 
 final routerNotifierProvider = Provider<RouterNotifier>((ref) {
+
   return RouterNotifier(ref.container);
 });
 
