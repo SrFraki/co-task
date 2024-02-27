@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:task_sharing/config/theme/theme.dart';
+import 'package:task_sharing/features/tasks/domain/models/dbdata.dart';
+import 'package:task_sharing/features/tasks/domain/models/task.dart';
 import 'package:text_scroll/text_scroll.dart';
 
 class UsersTaskInfo extends StatelessWidget {
   const UsersTaskInfo({
     super.key,
-    this.name = '',
-    this.task = const [],
-    this.isCompleted = const [false]
+    required this.task,
+    required this.name
   });
 
-  final List<String> task;
-  final List<bool> isCompleted;
-  final String name;
+  final Task task;
+  final Name name;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class UsersTaskInfo extends StatelessWidget {
             SizedBox(
               width: width,
               child: Text(
-                name.toUpperCase(),
+                name.name.toUpperCase(),
                 style: TextStyle(
                   fontSize: 16,
                   color: ATheme.darkMode ? Colors.white70 : Colors.black
@@ -50,7 +50,7 @@ class UsersTaskInfo extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 padding: const EdgeInsets.only(right: 20),
                 child: TextScroll(
-                  task.fold<String>('', (p, e) => p != '' ? '$p / $e' : e),
+                  task.task,
                   style: TextStyle(
                     fontSize: 16,
                     color: ATheme.darkMode ? Colors.white54 : Colors.black
@@ -70,10 +70,10 @@ class UsersTaskInfo extends StatelessWidget {
               duration: const Duration(milliseconds: 100),
               height: 50,
               width: 50,
-              color: isCompleted.fold(true, (p, e) => p && e) ? Colors.green.shade300 : ATheme.darkMode ? Colors.red.shade300 : Colors.red.shade200,
+              color: task.finalized ? Colors.green.shade300 : ATheme.darkMode ? Colors.red.shade300 : Colors.red.shade200,
               child: Icon(
-                isCompleted.fold(true, (p, e) => p && e) ? Icons.done_rounded : Icons.close_rounded, 
-                color: isCompleted.fold(true, (p, e) => p && e) ? Colors.green.shade100 : Colors.red.shade100),
+                task.finalized ? Icons.done_rounded : Icons.close_rounded, 
+                color: task.finalized ? Colors.green.shade100 : Colors.red.shade100),
             )
             
           ],

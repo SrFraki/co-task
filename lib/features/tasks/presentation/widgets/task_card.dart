@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:task_sharing/config/theme/theme.dart';
+import 'package:task_sharing/features/tasks/domain/models/task.dart';
 
 class TaskCard extends StatelessWidget {
   const TaskCard({
     super.key,
-    this.isCompleted = false,
-    this.task = 'NO TIENES TAREAS',
+    required this.task,
     required this.onTap
   });
 
-  final bool isCompleted;
-  final String task;
+  final Task task;
   final VoidCallback onTap;
 
   @override
@@ -28,7 +27,7 @@ class TaskCard extends StatelessWidget {
               width: double.infinity,
               alignment: Alignment.center,
               child: Text(
-                task,
+                task.task,
                 style: GoogleFonts.poppins().copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
@@ -53,18 +52,18 @@ class TaskCard extends StatelessWidget {
               height: 50,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: isCompleted ? Colors.green.shade300 : Colors.transparent,
+                color: task.finalized ? Colors.green.shade300 : Colors.transparent,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: isCompleted ? Colors.green.shade300 : ATheme.darkMode ? Colors.white70 :Colors.black,
+                  color: task.finalized ? Colors.green.shade300 : ATheme.darkMode ? Colors.white70 :Colors.black,
                   width: 2
                 )
               ),
               child: Text(
-                isCompleted ? 'COMPLETADO' : 'COMPLETAR',
+                task.finalized ? 'COMPLETADO' : 'COMPLETAR',
                 style: TextStyle(
                   fontSize: 18,
-                  color: isCompleted ? ATheme.darkMode ? Colors.green.shade50 : Colors.green.shade100 : ATheme.darkMode ? Colors.white70 : Colors.black,
+                  color: task.finalized ? ATheme.darkMode ? Colors.green.shade50 : Colors.green.shade100 : ATheme.darkMode ? Colors.white70 : Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
               ),

@@ -1,6 +1,9 @@
+import 'package:flutter/widgets.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hive/hive.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:task_sharing/features/shared/infrastructure/services/storage_service.dart';
@@ -12,12 +15,15 @@ part 'auth_provider.g.dart';
 class Auth extends _$Auth {
 
 // ignore: avoid_public_notifier_properties
-  late StorageServ storage;
+  late StoreServ storage;
   
   @override
   AuthState build() {
-    storage = StorageServ(true);
-    listenToAuth();
+    storage = StoreServ<String>(StoreType.auth);
+    storage.init().then((_) async {
+      await listenToAuth();
+      listen();
+    });
     return AuthState();
   }
 
@@ -31,10 +37,21 @@ class Auth extends _$Auth {
           token: await user.getIdToken(true),
           uid: user.uid,
         );
-        await storeInformation();
+        storeInformation();
       }
     });
   }
+
+  void listen() => ValueListenableBuilder<Box>(
+    valueListenable: storage.getListenable('token'),
+    builder: (context, box, widget) {
+      if(box.get('token') == null){
+        logout();
+      }
+      return const SizedBox();
+    },
+  );
+
 
   Future<void> signInWithGoogle() async {
 
@@ -50,7 +67,6 @@ class Auth extends _$Auth {
 
       final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
 
-
       state = state.copyWith(
         status: AuthStatus.auth,
         token: userCredential.credential?.accessToken ?? '',
@@ -61,31 +77,23 @@ class Auth extends _$Auth {
 
       // await requestPermission();
       ref.read(tasksPProvider.notifier).init();
-
     } catch (_) {
       logout();
     }
 
   }
 
-  Future<void> requestPermission() async {
-    await Permission.notification.isDenied.then((value) async {
-      if(value){
-        await Permission.notification.request();
-      }
-    });
-  }
-
   Future<String?> refreshToken() async {
     String? token = await FirebaseAuth.instance.currentUser?.getIdToken(true);
     state = state.copyWith(token: token);
     await storeInformation();
-    return token ??= await refreshToken();
+    return token ?? await refreshToken();
   }
 
 
   Future<void> storeInformation() async {
-    await storage.write(StorageKey.token.toString(), state.token);
+    storage.write('token', state.token);
+    storage.write('uid', state.uid);
   }
 
   Future<void> logout() async {
@@ -120,7 +128,6 @@ class AuthState{
     uid: uid ?? this.uid,
   );
 }
-
 
 
 enum AuthStatus{

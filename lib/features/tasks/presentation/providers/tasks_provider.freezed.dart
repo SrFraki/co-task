@@ -16,19 +16,12 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$TasksPState {
-  List<String> get names => throw _privateConstructorUsedError;
-  set names(List<String> value) => throw _privateConstructorUsedError;
-  List<List<String>> get tasks => throw _privateConstructorUsedError;
-  set tasks(List<List<String>> value) => throw _privateConstructorUsedError;
-  List<List<bool>> get areCompleted => throw _privateConstructorUsedError;
-  set areCompleted(List<List<bool>> value) =>
-      throw _privateConstructorUsedError;
-  List<String> get ownTasks => throw _privateConstructorUsedError;
-  set ownTasks(List<String> value) => throw _privateConstructorUsedError;
-  List<bool> get ownAreCompleted => throw _privateConstructorUsedError;
-  set ownAreCompleted(List<bool> value) => throw _privateConstructorUsedError;
-  List<int> get simplifiedList => throw _privateConstructorUsedError;
-  set simplifiedList(List<int> value) => throw _privateConstructorUsedError;
+  List<Name> get names => throw _privateConstructorUsedError;
+  set names(List<Name> value) => throw _privateConstructorUsedError;
+  List<Task> get tasks => throw _privateConstructorUsedError;
+  set tasks(List<Task> value) => throw _privateConstructorUsedError;
+  List<Task> get ownTasks => throw _privateConstructorUsedError;
+  set ownTasks(List<Task> value) => throw _privateConstructorUsedError;
   int get pos => throw _privateConstructorUsedError;
   set pos(int value) => throw _privateConstructorUsedError;
 
@@ -43,14 +36,7 @@ abstract class $TasksPStateCopyWith<$Res> {
           TasksPState value, $Res Function(TasksPState) then) =
       _$TasksPStateCopyWithImpl<$Res, TasksPState>;
   @useResult
-  $Res call(
-      {List<String> names,
-      List<List<String>> tasks,
-      List<List<bool>> areCompleted,
-      List<String> ownTasks,
-      List<bool> ownAreCompleted,
-      List<int> simplifiedList,
-      int pos});
+  $Res call({List<Name> names, List<Task> tasks, List<Task> ownTasks, int pos});
 }
 
 /// @nodoc
@@ -68,37 +54,22 @@ class _$TasksPStateCopyWithImpl<$Res, $Val extends TasksPState>
   $Res call({
     Object? names = null,
     Object? tasks = null,
-    Object? areCompleted = null,
     Object? ownTasks = null,
-    Object? ownAreCompleted = null,
-    Object? simplifiedList = null,
     Object? pos = null,
   }) {
     return _then(_value.copyWith(
       names: null == names
           ? _value.names
           : names // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<Name>,
       tasks: null == tasks
           ? _value.tasks
           : tasks // ignore: cast_nullable_to_non_nullable
-              as List<List<String>>,
-      areCompleted: null == areCompleted
-          ? _value.areCompleted
-          : areCompleted // ignore: cast_nullable_to_non_nullable
-              as List<List<bool>>,
+              as List<Task>,
       ownTasks: null == ownTasks
           ? _value.ownTasks
           : ownTasks // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      ownAreCompleted: null == ownAreCompleted
-          ? _value.ownAreCompleted
-          : ownAreCompleted // ignore: cast_nullable_to_non_nullable
-              as List<bool>,
-      simplifiedList: null == simplifiedList
-          ? _value.simplifiedList
-          : simplifiedList // ignore: cast_nullable_to_non_nullable
-              as List<int>,
+              as List<Task>,
       pos: null == pos
           ? _value.pos
           : pos // ignore: cast_nullable_to_non_nullable
@@ -115,14 +86,7 @@ abstract class _$$TasksPStateImplCopyWith<$Res>
       __$$TasksPStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {List<String> names,
-      List<List<String>> tasks,
-      List<List<bool>> areCompleted,
-      List<String> ownTasks,
-      List<bool> ownAreCompleted,
-      List<int> simplifiedList,
-      int pos});
+  $Res call({List<Name> names, List<Task> tasks, List<Task> ownTasks, int pos});
 }
 
 /// @nodoc
@@ -138,37 +102,22 @@ class __$$TasksPStateImplCopyWithImpl<$Res>
   $Res call({
     Object? names = null,
     Object? tasks = null,
-    Object? areCompleted = null,
     Object? ownTasks = null,
-    Object? ownAreCompleted = null,
-    Object? simplifiedList = null,
     Object? pos = null,
   }) {
     return _then(_$TasksPStateImpl(
       names: null == names
           ? _value.names
           : names // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<Name>,
       tasks: null == tasks
           ? _value.tasks
           : tasks // ignore: cast_nullable_to_non_nullable
-              as List<List<String>>,
-      areCompleted: null == areCompleted
-          ? _value.areCompleted
-          : areCompleted // ignore: cast_nullable_to_non_nullable
-              as List<List<bool>>,
+              as List<Task>,
       ownTasks: null == ownTasks
           ? _value.ownTasks
           : ownTasks // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      ownAreCompleted: null == ownAreCompleted
-          ? _value.ownAreCompleted
-          : ownAreCompleted // ignore: cast_nullable_to_non_nullable
-              as List<bool>,
-      simplifiedList: null == simplifiedList
-          ? _value.simplifiedList
-          : simplifiedList // ignore: cast_nullable_to_non_nullable
-              as List<int>,
+              as List<Task>,
       pos: null == pos
           ? _value.pos
           : pos // ignore: cast_nullable_to_non_nullable
@@ -183,37 +132,25 @@ class _$TasksPStateImpl implements _TasksPState {
   _$TasksPStateImpl(
       {this.names = const [],
       this.tasks = const [],
-      this.areCompleted = const [],
       this.ownTasks = const [],
-      this.ownAreCompleted = const [],
-      this.simplifiedList = const [],
       this.pos = 0});
 
   @override
   @JsonKey()
-  List<String> names;
+  List<Name> names;
   @override
   @JsonKey()
-  List<List<String>> tasks;
+  List<Task> tasks;
   @override
   @JsonKey()
-  List<List<bool>> areCompleted;
-  @override
-  @JsonKey()
-  List<String> ownTasks;
-  @override
-  @JsonKey()
-  List<bool> ownAreCompleted;
-  @override
-  @JsonKey()
-  List<int> simplifiedList;
+  List<Task> ownTasks;
   @override
   @JsonKey()
   int pos;
 
   @override
   String toString() {
-    return 'TasksPState(names: $names, tasks: $tasks, areCompleted: $areCompleted, ownTasks: $ownTasks, ownAreCompleted: $ownAreCompleted, simplifiedList: $simplifiedList, pos: $pos)';
+    return 'TasksPState(names: $names, tasks: $tasks, ownTasks: $ownTasks, pos: $pos)';
   }
 
   @JsonKey(ignore: true)
@@ -225,32 +162,20 @@ class _$TasksPStateImpl implements _TasksPState {
 
 abstract class _TasksPState implements TasksPState {
   factory _TasksPState(
-      {List<String> names,
-      List<List<String>> tasks,
-      List<List<bool>> areCompleted,
-      List<String> ownTasks,
-      List<bool> ownAreCompleted,
-      List<int> simplifiedList,
+      {List<Name> names,
+      List<Task> tasks,
+      List<Task> ownTasks,
       int pos}) = _$TasksPStateImpl;
 
   @override
-  List<String> get names;
-  set names(List<String> value);
+  List<Name> get names;
+  set names(List<Name> value);
   @override
-  List<List<String>> get tasks;
-  set tasks(List<List<String>> value);
+  List<Task> get tasks;
+  set tasks(List<Task> value);
   @override
-  List<List<bool>> get areCompleted;
-  set areCompleted(List<List<bool>> value);
-  @override
-  List<String> get ownTasks;
-  set ownTasks(List<String> value);
-  @override
-  List<bool> get ownAreCompleted;
-  set ownAreCompleted(List<bool> value);
-  @override
-  List<int> get simplifiedList;
-  set simplifiedList(List<int> value);
+  List<Task> get ownTasks;
+  set ownTasks(List<Task> value);
   @override
   int get pos;
   set pos(int value);

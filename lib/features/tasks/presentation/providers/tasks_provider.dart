@@ -1,8 +1,13 @@
+import 'dart:developer';
+
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:task_sharing/features/auth/presentation/providers/auth_provider.dart';
-import 'package:task_sharing/features/tasks/domain/models/tasks_data_model.dart';
+import 'package:task_sharing/features/tasks/domain/models/dbdata.dart';
+import 'package:task_sharing/features/tasks/domain/models/task.dart';
 import 'package:task_sharing/features/tasks/presentation/providers/task_repository_provider.dart';
 
 
@@ -11,6 +16,10 @@ part 'tasks_provider.freezed.dart';
 
 @Riverpod(keepAlive: true)
 class TasksP extends _$TasksP {
+
+  int _mutex = 2;
+  int _changesRealized = 0;
+
   @override
   TasksPState build() {
     return TasksPState();
@@ -18,63 +27,98 @@ class TasksP extends _$TasksP {
 
 
 
+
   void toggleIsCompleted(int pos){
-    final completedTasks = state.areCompleted;
-    completedTasks[state.pos][pos] = !(completedTasks[state.pos][pos]);
-    final ownAreCompleted = state.ownAreCompleted;
-    ownAreCompleted[pos] = (ownAreCompleted[pos]) == true;
-    state = state.copyWith(areCompleted: completedTasks, ownAreCompleted: ownAreCompleted);
-    ref.read(taskRepositoryProvider).toggleComplete(ownAreCompleted[pos], state.pos, pos);
+    _changesRealized++;
+    final value = !state.ownTasks[pos].finalized;
+    state.ownTasks[pos].finalized = value;
+    state.tasks[state.ownTasks[pos].user].finalized = value;
+    ref.notifyListeners();
+    ref.read(taskRepositoryProvider).toggleComplete(state.pos, state.ownTasks[pos]);
   }
 
-  void init() async {
-    final TasksData? data = await ref.read(taskRepositoryProvider).getData();
-    if(data == null) return;
 
-    List<String> names = [];
-    List<List<String>> tasks = [];
-    List<List<bool>> areCompleted = [];
-    List<int> simplifiedList = [];
+
+
+  void _updateData(DbData data) async {
+    final date = DateTime.now();
+    final currentWeekMon = DateTime.parse(DateFormat("yyyy-MM-dd").format(date.subtract(Duration(days: date.weekday - 1))));
+
     final uid = ref.read(authProvider).uid;
-    int pos = -1;
-    
+    int pos = data.names.indexWhere((e) => e.uid == uid);
+    List<Task> ownTasks = [];
 
-    data.namesAndUids.asMap().forEach((listKey, value) {
-      if(value.contains(uid)){
-        pos = listKey;
+    if(currentWeekMon.isAfter(DateTime.fromMillisecondsSinceEpoch(data.week))){
+      int i=0;
+      for(Task task in data.tasks){
+        if(task.finalized){
+          data.tasks[i] = task.copyWith(
+            finalized: false,
+            accumulatedWeeks: 0,
+            user: (task.user-1-task.accumulatedWeeks)%data.names.length
+          );
+        }else{
+          if(_changesRealized-- <= 0){
+            data.tasks[i] = task.copyWith(accumulatedWeeks: ++task.accumulatedWeeks);
+            _changesRealized = 0;
+          }
+        }
+        if(i == pos) ownTasks.add(data.tasks[i].copyWith(user: i));
+        i++;
       }
-      names.add(value.split('-').first);
-      tasks.add(data.tasks[listKey].where((e) => e != '__null__').toList());
-      areCompleted.add(data.areCompleted[listKey].where((e) => e != '__null__').map((e) => '$e'.toLowerCase() == "true").toList());
-      if(tasks[listKey].isNotEmpty) simplifiedList.add(listKey);
-    });
 
+      if(_mutex > 0){
+        data.week = currentWeekMon.millisecondsSinceEpoch;
+        ref.read(taskRepositoryProvider).updateData(data);
+      }
+    }
 
     state = state.copyWith(
-      names: names,
-      tasks: tasks,
-      areCompleted: areCompleted,
-      pos: pos,
-      ownAreCompleted: areCompleted[pos].isEmpty ? [true] : areCompleted[pos],
-      ownTasks: tasks[pos].isEmpty ? ['NO TIENES TAREAS'] : tasks[pos],
-      simplifiedList: simplifiedList
+      names: data.names,
+      tasks: data.tasks,
+      ownTasks: data.tasks.where((e) => e.user == pos).toList(),
+      pos: pos
     );
+    
+    
+  }
+
+
+
+
+
+  void init() async {
+    final DbData? data = await ref.read(taskRepositoryProvider).getData();
+    if(data == null) return FlutterNativeSplash.remove();
+
+    ref.read(taskRepositoryProvider).listener().listen((event) {
+      final String path = event['path'];
+      if(path == '/') {
+        _mutex--;
+      } else {
+        final int pos = int.tryParse(path.split('/')[2]) ?? -1;
+        if(state.pos != pos){
+          updateChanges(
+            pos,
+            Task.fromJson(event['data'])
+          );
+        }
+      }
+    });
+
+    _updateData(data);
 
     FlutterNativeSplash.remove();
 
-    ref.read(taskRepositoryProvider).listener().listen((event) {
-      updateChanges(event);
-    });
-
   }
 
 
-  void updateChanges((int, int, bool) data){
-    if(data.$1 != -1){
-        var areCompleted = state.areCompleted;
-        areCompleted[data.$1][data.$2] = data.$3;
-        state = state.copyWith(areCompleted: areCompleted);
-      }
+
+
+
+  void updateChanges(int pos, Task task){
+    state.tasks[pos] = task;
+    ref.notifyListeners();
   }
 
 
@@ -84,12 +128,9 @@ class TasksP extends _$TasksP {
 @unfreezed
 class TasksPState with _$TasksPState {
     factory TasksPState({
-        @Default([]) List<String> names,
-        @Default([]) List<List<String>> tasks,
-        @Default([]) List<List<bool>> areCompleted,
-        @Default([]) List<String> ownTasks,
-        @Default([]) List<bool> ownAreCompleted,
-        @Default([]) List<int> simplifiedList,
+        @Default([]) List<Name> names,
+        @Default([]) List<Task> tasks,
+        @Default([]) List<Task> ownTasks,
         @Default(0) int pos
     }) = _TasksPState;
 }

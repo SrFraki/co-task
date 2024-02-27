@@ -3,10 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_sharing/features/auth/presentation/providers/auth_provider.dart';
 
 
-final routerNotifierProvider = Provider<RouterNotifier>((ref) {
-
-  return RouterNotifier(ref.container);
-});
+final routerNotifierProvider = Provider<RouterNotifier>((ref) => RouterNotifier(ref.container));
 
 class RouterNotifier extends ChangeNotifier {
   

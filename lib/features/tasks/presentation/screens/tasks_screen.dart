@@ -59,74 +59,67 @@ class _TasksScreenViewState extends ConsumerState<TasksScreenView> {
     final state = ref.watch(tasksPProvider);
     final notifier = ref.read(tasksPProvider.notifier);
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 348,
-            child: PageView.builder(
-              physics: const BouncingScrollPhysics(),
-              onPageChanged: (value) => setState(() => page = value),
-              itemCount: state.ownAreCompleted.length,
-              itemBuilder: (context, i) => TaskCard(
-                onTap: () => state.ownTasks.first != 'NO TIENES TAREAS' ? notifier.toggleIsCompleted(page) : null,
-                isCompleted: state.ownAreCompleted[i],
-                task: state.ownTasks[i],
-              ),
+    // final size = MediaQuery.of(context).size;
+    
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 348,
+          child: PageView.builder(
+            physics: const BouncingScrollPhysics(),
+            onPageChanged: (value) => setState(() => page = value),
+            itemCount: state.ownTasks.length,
+            itemBuilder: (context, i) => TaskCard(
+              onTap: () => notifier.toggleIsCompleted(page),
+              task: state.ownTasks[i],
             ),
           ),
-          
-          if(state.ownAreCompleted.isNotEmpty)
-            PageViewDotIndicator(
-              currentItem: page,
-              count: state.ownAreCompleted.length,
-              unselectedColor: Colors.grey.shade400,
-              selectedColor: Colors.green.shade300
-            ),
-      
-          const SizedBox(height: 60),
-      
-      
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              'REGISTRO',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-                color: ATheme.darkMode ? Colors.grey.shade600 : Colors.grey.shade800
-              ),
+        ),
+        
+        if(state.ownTasks.isNotEmpty)
+          PageViewDotIndicator(
+            currentItem: page,
+            count: state.ownTasks.length,
+            unselectedColor: Colors.grey.shade400,
+            selectedColor: Colors.green.shade300
+          ),
+    
+        // const SizedBox(height: 60),
+        const Spacer(),
+    
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Text(
+            'REGISTRO',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              color: ATheme.darkMode ? Colors.grey.shade600 : Colors.grey.shade800
             ),
           ),
-      
-          const SizedBox(height: 15,),
-
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+        ),
+    
+        const SizedBox(height: 15,),
+        
+        Padding(
+          padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+          child: SingleChildScrollView(
             child: Column(
               children: [
-                for(int i=0; i<state.simplifiedList.length; i++)
+                for(int i=0; i<state.tasks.length; i++)
                   UsersTaskInfo(
-                    name: state.names[state.simplifiedList[i]],
-                    task: state.tasks[state.simplifiedList[i]],
-                    isCompleted: state.areCompleted[state.simplifiedList[i]],
+                    name: state.names[i],
+                    task: state.tasks[i]
                   ),
               ],
             ),
-          )
-      
-          // Expanded(
-          //   child: ListView.builder(
-          //     padding: const EdgeInsets.symmetric(horizontal: 20),
-          //     physics: const ClampingScrollPhysics(),
-          //     itemCount: state.simplifiedList.length,
-          //     // itemCount: state.names.length,
-          //     itemBuilder: (context, i) => 
-          //   ),
-          // )
-        ],
-      ),
+          ),
+        ),
+    
+        const Spacer(),
+      ],
     );
   }
 }

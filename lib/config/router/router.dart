@@ -5,7 +5,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:task_sharing/config/router/router_notifier.dart';
 import 'package:task_sharing/features/auth/presentation/screens/auth_screen.dart';
-import 'package:task_sharing/features/shared/presentation/providers/dio_provider.dart';
 import 'package:task_sharing/features/shared/presentation/screens/new_version_screen.dart';
 import 'package:task_sharing/features/tasks/presentation/providers/task_repository_provider.dart';
 import 'package:task_sharing/features/tasks/presentation/providers/tasks_provider.dart';
@@ -19,7 +18,6 @@ part 'router.g.dart';
 GoRouter router(RouterRef ref) {
 // ignore: avoid_manual_providers_as_generated_provider_dependency
   final routerNotifier = ref.watch(routerNotifierProvider);
-  bool loaded = false;
   return GoRouter(
     refreshListenable: routerNotifier,
     initialLocation: '/',
@@ -42,34 +40,28 @@ GoRouter router(RouterRef ref) {
       final authStatus = routerNotifier.authStatus;
 
       switch(authStatus){
-        case AuthStatus.loading: return '/';
-        case AuthStatus.auth:{
-          if(!loaded){
-            await ref.read(dioServiceProvider.notifier).load();
-
-            final versionData = await ref.read(taskRepositoryProvider).getVersion();
-            if(versionData != null){
-              final versionList = versionData.split('-*-');
-              final version = await PackageInfo.fromPlatform();
-              if(versionList.first != version.version){
+        case AuthStatus.loading: {
+          Future(() async { 
+            final version = await ref.read(taskRepositoryProvider).getVersion();
+            if(version != null){
+              final currentVersion = await PackageInfo.fromPlatform();
+              if(version.version != currentVersion.version){
                 FlutterNativeSplash.remove();
-                return Uri(path: '/new_version', queryParameters: {'link':versionList.last}).toString();
-                // return '/new_version/${versionList.last}';
+                return Uri(path: '/new_version', queryParameters: {'link':version.link}).toString();
               }
             }
-            
-            ref.read(tasksPProvider.notifier).init();
             ref.read(authProvider);
-            loaded = true;
-            FlutterNativeSplash.remove();
-          }
+            ref.read(tasksPProvider.notifier).init();
+          });
+          return '/';
+        }
+        case AuthStatus.auth:{
           return '/';
         }
         case AuthStatus.notAuth:{
           return '/auth';
         }
       }
-
     },
   );
 }
