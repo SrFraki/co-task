@@ -41,18 +41,16 @@ GoRouter router(RouterRef ref) {
 
       switch(authStatus){
         case AuthStatus.loading: {
-          Future(() async { 
-            final version = await ref.read(taskRepositoryProvider).getVersion();
-            if(version != null){
-              final currentVersion = await PackageInfo.fromPlatform();
-              if(version.version != currentVersion.version){
-                FlutterNativeSplash.remove();
-                return Uri(path: '/new_version', queryParameters: {'link':version.link}).toString();
-              }
+          final version = await ref.read(taskRepositoryProvider).getVersion();
+          if(version != null){
+            final currentVersion = await PackageInfo.fromPlatform();
+            if(version.version != currentVersion.version){
+              FlutterNativeSplash.remove();
+              return Uri(path: '/new_version', queryParameters: {'link':version.link}).toString();
             }
-            ref.read(authProvider);
-            ref.read(tasksPProvider.notifier).init();
-          });
+          }
+          ref.read(authProvider);
+          ref.read(tasksPProvider.notifier).init();
           return '/';
         }
         case AuthStatus.auth:{
