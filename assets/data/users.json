@@ -1,0 +1,7 @@
+
+{
+    "uid1":{
+      "owner":["id1"],
+      "belonging":["id2"]
+    }
+}

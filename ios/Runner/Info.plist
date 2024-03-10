@@ -47,6 +47,8 @@
 		<true/>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
+		<key>CFBundleDisplayName</key>
+		<string>Co-Task</string> 
 		<key>LSApplicationQueriesSchemes</key>
 		<array>
 			<string>https</string>

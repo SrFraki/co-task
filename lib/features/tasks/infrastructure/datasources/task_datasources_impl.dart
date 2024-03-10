@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:task_sharing/features/tasks/domain/models/dbdata.dart';
 import 'package:task_sharing/features/tasks/domain/models/task.dart';
 import 'package:task_sharing/features/tasks/domain/models/version.dart';
@@ -54,8 +55,15 @@ class TaskDatasourceImpl {
 
   Future<DbData?> getData([String? currentDate]) async {
     try {
-      final resp = await _dio.get('/.json');
-      return DbData.fromJson(resp.data);
+      final namesReq = _dio.get('/names.json');
+      final tasksReq = _dio.get('/tasks.json');
+      final weekReq = _dio.get('/week.json');
+
+      return DbData.fromJson({
+        'names': (await namesReq).data,
+        'tasks': (await tasksReq).data,
+        'week': (await weekReq).data
+      });
     } catch (e) {
       log(e.toString());
       return null;
@@ -76,20 +84,6 @@ class TaskDatasourceImpl {
       );
 
       await for(Uint8List event in resp.data!.stream){
-        // final data = json.decode(utf8.decode(event).split('data: ').last);
-        // if(data == null) continue;
-        // log(data.toString());
-        // if(data['path'] == '/') continue;
-
-        // final listKey = (data['path'] as String).split('/')..removeAt(0);
-        // log(data.toString());
-        // if(listKey.length > 1){
-        //   yield (int.parse(listKey.first), int.parse(listKey.last), data['data']);
-        // }else{
-        //   final dataMap = data['data'] as Map<String, dynamic>;
-        //   yield (int.parse(listKey.last), int.parse(dataMap.keys.first), bool.parse(dataMap.values.first));
-        // }
-
         final Map<String, dynamic>? data = json.decode(utf8.decode(event).split('data: ').last);
         if(data == null) continue;
         log(data.toString());

@@ -7,11 +7,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 class StoreServ<T>{
 
   final StoreType _type;
-  late Box<T> _box;
+  Box<T>? _box;
 
   StoreServ(StoreType type) : _type = type;
 
   Future<void> init() async {
+    if(_box != null) return;
     switch(_type){
       case StoreType.auth:
         const ss =  FlutterSecureStorage();
@@ -37,26 +38,26 @@ class StoreServ<T>{
   //     // ..registerAdapter(SessionMetricsAdapter());
   // }
 
-  T? read(String key) => _box.get(key);
+  T? read(String key) => _box!.get(key);
   List<T>? readAll(){
-    var a = _box.values.toList();
+    var a = _box!.values.toList();
     return a;
   }
 
 
   Future<void> write(String key, T? value) async {
     if(value == null) return;
-    await _box.put(key, value);
+    await _box!.put(key, value);
   }
  
 
-  Future<void> delete(String key) async => await _box.delete(key);
-  Future<void> deleteAll() async => await _box.deleteAll(['token', 'uid']);
-  Future<void> deleteAt(int index) async => await _box.deleteAt(index);
+  Future<void> delete(String key) async => await _box!.delete(key);
+  Future<void> deleteAll() async => await _box!.deleteAll(['token', 'uid']);
+  Future<void> deleteAt(int index) async => await _box!.deleteAt(index);
 
-  ValueListenable<Box<T>> getListenable(String key) => _box.listenable(keys: [key]);
+  ValueListenable<Box<T>> getListenable(String key) => _box!.listenable(keys: [key]);
 }
 
 enum StoreType{
-  auth
+  auth, tasks
 }

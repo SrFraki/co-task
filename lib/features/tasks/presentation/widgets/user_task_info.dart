@@ -8,21 +8,28 @@ class UsersTaskInfo extends StatelessWidget {
   const UsersTaskInfo({
     super.key,
     required this.task,
-    required this.name
+    required this.name,
+    required this.own
   });
 
   final Task task;
   final Name name;
+  final bool own;
 
   @override
   Widget build(BuildContext context) {
 
     final width = (MediaQuery.of(context).size.width - 98 - 60)/3;
 
-    return Card(
+    return Container(
       margin: const EdgeInsets.fromLTRB(4, 4, 4, 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      elevation: 3,
+      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      // elevation: 3,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: own ? ATheme.ownTaskCardColor : ATheme.cardColor,
+        boxShadow: ATheme.shadow
+      ),
       clipBehavior: Clip.antiAlias,
       child: Container(
         padding: const EdgeInsets.only(left: 20),
@@ -70,7 +77,7 @@ class UsersTaskInfo extends StatelessWidget {
               duration: const Duration(milliseconds: 100),
               height: 50,
               width: 50,
-              color: task.finalized ? Colors.green.shade300 : ATheme.darkMode ? Colors.red.shade300 : Colors.red.shade200,
+              color: task.finalized ? ATheme.green : ATheme.darkMode ? Colors.red.shade300 : Colors.red.shade200,
               child: Icon(
                 task.finalized ? Icons.done_rounded : Icons.close_rounded, 
                 color: task.finalized ? Colors.green.shade100 : Colors.red.shade100),

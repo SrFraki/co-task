@@ -3,10 +3,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:task_sharing/features/auth/presentation/providers/auth_provider.dart';
+import 'package:task_sharing/features/shared/infrastructure/services/storage_service.dart';
 import 'package:task_sharing/features/tasks/domain/models/dbdata.dart';
 import 'package:task_sharing/features/tasks/domain/models/task.dart';
 import 'package:task_sharing/features/tasks/presentation/providers/task_repository_provider.dart';
-
 
 part 'tasks_provider.g.dart';
 part 'tasks_provider.freezed.dart';
@@ -16,6 +16,7 @@ class TasksP extends _$TasksP {
 
   int _mutex = 2;
   int _changesRealized = 0;
+  late StoreServ<int> _storage;
 
   @override
   TasksPState build() {
@@ -25,27 +26,39 @@ class TasksP extends _$TasksP {
 
 
 
-  void toggleIsCompleted(int pos){
+  void toggleIsCompleted(int pagePos){
     _changesRealized++;
-    final value = !state.ownTasks[pos].finalized;
-    state.ownTasks[pos].finalized = value;
-    state.tasks[state.ownTasks[pos].user].finalized = value;
+    final value = !state.ownTasks[pagePos].finalized;
+    state.ownTasks[pagePos].finalized = value;
+    state.tasks[state.ownTasks[pagePos].user].finalized = value;
     ref.notifyListeners();
-    ref.read(taskRepositoryProvider).toggleComplete(state.pos, state.ownTasks[pos]);
+    ref.read(taskRepositoryProvider).toggleComplete(state.pos, state.ownTasks[pagePos]);
+  }
+
+  int _getUserPos(List<Name> names){
+    int? pos = _storage.read('userPos');
+    if(pos == null){
+      final uid = ref.read(authProvider).uid;
+      pos = names.indexWhere((e) => e.uid == uid);
+      if(pos != -1) _storage.write('userPos', pos);
+    }
+    return pos;
   }
 
 
-
-
   void _updateData(DbData data) async {
-    final date = DateTime.now();
-    final currentWeekMon = DateTime.parse(DateFormat("yyyy-MM-dd").format(date.subtract(Duration(days: date.weekday - 1))));
+    // final date = tz.TZDateTime.now(tz.getLocation('Europe/España'));
+    final date = DateTime.now().toUtc();
+    final currentWeekMon = DateTime.parse(DateFormat("yyyy-MM-dd").format(date.subtract(Duration(days: date.weekday-1)))).toUtc();
+    // final currentWeekMon = DateTime.parse(DateFormat("yyyy-MM-dd").format(date.subtract(Duration(days: date.weekday - 1))));
 
-    final uid = ref.read(authProvider).uid;
-    int pos = data.names.indexWhere((e) => e.uid == uid);
-    List<Task> ownTasks = [];
+    int pos = _getUserPos(data.names);
+    List<Task> ownTasks = [], lastWeekTasks = [];
 
-    if(currentWeekMon.isAfter(DateTime.fromMillisecondsSinceEpoch(data.week))){
+    final dbWeekMon = DateTime.fromMillisecondsSinceEpoch(data.week, isUtc: true);
+
+    if(currentWeekMon.isAfter(dbWeekMon)){
+      lastWeekTasks = data.tasks;
       int i=0;
       for(Task task in data.tasks){
         if(task.finalized){
@@ -60,32 +73,45 @@ class TasksP extends _$TasksP {
             _changesRealized = 0;
           }
         }
-        if(i == pos) ownTasks.add(data.tasks[i].copyWith(user: i));
+        if(data.tasks[i].user == pos) ownTasks.add(data.tasks[i].copyWith(user: i));
         i++;
       }
 
       if(_mutex > 0){
         data.week = currentWeekMon.millisecondsSinceEpoch;
-        ref.read(taskRepositoryProvider).updateData(data);
+      }
+
+    }else{
+      int i=0;
+      for(Task task in data.tasks){
+        if(task.user == pos) {
+          ownTasks.add(task.copyWith(user: i));
+        }
+        lastWeekTasks.add(task.copyWith(
+          finalized: task.accumulatedWeeks == 0,
+          user: (task.user+1+task.accumulatedWeeks)%data.tasks.length
+        ));
+        i++;
       }
     }
 
     state = state.copyWith(
       names: data.names,
       tasks: data.tasks,
-      ownTasks: data.tasks.where((e) => e.user == pos).toList(),
-      pos: pos
+      ownTasks: ownTasks,
+      pos: pos,
+      lastWeekTasks: lastWeekTasks
     );
-    
-    
   }
 
 
 
 
 
-  void init() async {
+  Future<void> init() async {
     final DbData? data = await ref.read(taskRepositoryProvider).getData();
+    _storage = StoreServ<int>(StoreType.tasks);
+    final storeInit = _storage.init();
     if(data == null) return FlutterNativeSplash.remove();
 
     ref.read(taskRepositoryProvider).listener().listen((event) {
@@ -103,14 +129,12 @@ class TasksP extends _$TasksP {
       }
     });
 
+    await storeInit;
     _updateData(data);
 
     FlutterNativeSplash.remove();
 
   }
-
-
-
 
 
   void updateChanges(int pos, Task task){
@@ -128,6 +152,7 @@ class TasksPState with _$TasksPState {
         @Default([]) List<Name> names,
         @Default([]) List<Task> tasks,
         @Default([]) List<Task> ownTasks,
+        @Default([]) List<Task> lastWeekTasks,
         @Default(0) int pos
     }) = _TasksPState;
 }

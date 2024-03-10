@@ -12,6 +12,7 @@ class DioServ{
   String? _token;
 
   DioServ(){
+    _storage = StoreServ<String>(StoreType.auth);
     dio = Dio(
       BaseOptions(
         baseUrl: 'https://task-share-fec6e-default-rtdb.europe-west1.firebasedatabase.app/',
@@ -39,7 +40,7 @@ class DioServ{
             //TODO!!
           }
           if(error.response?.statusCode == 401){
-            await _initStorage();
+            await _storage!.init();
             final flag = await _refreshToken();
             if(!flag) return handler.reject(error);
 
@@ -57,7 +58,7 @@ class DioServ{
 
   Future<void> _onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     if(_token == null){
-      await _initStorage();
+      await _storage!.init();
       _token = _storage!.read('token');
       if(_token == null){
         final flag = await _refreshToken();
@@ -87,12 +88,5 @@ class DioServ{
     }
     _storage!.write('token', _token);
     return true;
-  }
-
-
-  Future<void> _initStorage() async {
-    if(_storage != null) return;
-    _storage = StoreServ<String>(StoreType.auth);
-    await _storage!.init();
   }
 }

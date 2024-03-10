@@ -12,7 +12,7 @@ part of 'tasks_provider.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$TasksPState {
@@ -22,6 +22,8 @@ mixin _$TasksPState {
   set tasks(List<Task> value) => throw _privateConstructorUsedError;
   List<Task> get ownTasks => throw _privateConstructorUsedError;
   set ownTasks(List<Task> value) => throw _privateConstructorUsedError;
+  List<Task> get lastWeekTasks => throw _privateConstructorUsedError;
+  set lastWeekTasks(List<Task> value) => throw _privateConstructorUsedError;
   int get pos => throw _privateConstructorUsedError;
   set pos(int value) => throw _privateConstructorUsedError;
 
@@ -36,7 +38,12 @@ abstract class $TasksPStateCopyWith<$Res> {
           TasksPState value, $Res Function(TasksPState) then) =
       _$TasksPStateCopyWithImpl<$Res, TasksPState>;
   @useResult
-  $Res call({List<Name> names, List<Task> tasks, List<Task> ownTasks, int pos});
+  $Res call(
+      {List<Name> names,
+      List<Task> tasks,
+      List<Task> ownTasks,
+      List<Task> lastWeekTasks,
+      int pos});
 }
 
 /// @nodoc
@@ -55,6 +62,7 @@ class _$TasksPStateCopyWithImpl<$Res, $Val extends TasksPState>
     Object? names = null,
     Object? tasks = null,
     Object? ownTasks = null,
+    Object? lastWeekTasks = null,
     Object? pos = null,
   }) {
     return _then(_value.copyWith(
@@ -69,6 +77,10 @@ class _$TasksPStateCopyWithImpl<$Res, $Val extends TasksPState>
       ownTasks: null == ownTasks
           ? _value.ownTasks
           : ownTasks // ignore: cast_nullable_to_non_nullable
+              as List<Task>,
+      lastWeekTasks: null == lastWeekTasks
+          ? _value.lastWeekTasks
+          : lastWeekTasks // ignore: cast_nullable_to_non_nullable
               as List<Task>,
       pos: null == pos
           ? _value.pos
@@ -86,7 +98,12 @@ abstract class _$$TasksPStateImplCopyWith<$Res>
       __$$TasksPStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<Name> names, List<Task> tasks, List<Task> ownTasks, int pos});
+  $Res call(
+      {List<Name> names,
+      List<Task> tasks,
+      List<Task> ownTasks,
+      List<Task> lastWeekTasks,
+      int pos});
 }
 
 /// @nodoc
@@ -103,6 +120,7 @@ class __$$TasksPStateImplCopyWithImpl<$Res>
     Object? names = null,
     Object? tasks = null,
     Object? ownTasks = null,
+    Object? lastWeekTasks = null,
     Object? pos = null,
   }) {
     return _then(_$TasksPStateImpl(
@@ -117,6 +135,10 @@ class __$$TasksPStateImplCopyWithImpl<$Res>
       ownTasks: null == ownTasks
           ? _value.ownTasks
           : ownTasks // ignore: cast_nullable_to_non_nullable
+              as List<Task>,
+      lastWeekTasks: null == lastWeekTasks
+          ? _value.lastWeekTasks
+          : lastWeekTasks // ignore: cast_nullable_to_non_nullable
               as List<Task>,
       pos: null == pos
           ? _value.pos
@@ -133,6 +155,7 @@ class _$TasksPStateImpl implements _TasksPState {
       {this.names = const [],
       this.tasks = const [],
       this.ownTasks = const [],
+      this.lastWeekTasks = const [],
       this.pos = 0});
 
   @override
@@ -146,11 +169,14 @@ class _$TasksPStateImpl implements _TasksPState {
   List<Task> ownTasks;
   @override
   @JsonKey()
+  List<Task> lastWeekTasks;
+  @override
+  @JsonKey()
   int pos;
 
   @override
   String toString() {
-    return 'TasksPState(names: $names, tasks: $tasks, ownTasks: $ownTasks, pos: $pos)';
+    return 'TasksPState(names: $names, tasks: $tasks, ownTasks: $ownTasks, lastWeekTasks: $lastWeekTasks, pos: $pos)';
   }
 
   @JsonKey(ignore: true)
@@ -165,6 +191,7 @@ abstract class _TasksPState implements TasksPState {
       {List<Name> names,
       List<Task> tasks,
       List<Task> ownTasks,
+      List<Task> lastWeekTasks,
       int pos}) = _$TasksPStateImpl;
 
   @override
@@ -176,6 +203,9 @@ abstract class _TasksPState implements TasksPState {
   @override
   List<Task> get ownTasks;
   set ownTasks(List<Task> value);
+  @override
+  List<Task> get lastWeekTasks;
+  set lastWeekTasks(List<Task> value);
   @override
   int get pos;
   set pos(int value);

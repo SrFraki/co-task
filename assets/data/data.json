@@ -1,0 +1,53 @@
+{
+  "id1":{
+    "names": [
+      {
+        "name": "Pablo",
+        "uid": "NkQyKPrVBrP7LwZoVMzzKu1Kzm82"
+      },
+      {
+        "name": "Saúl",
+        "uid": "v332sgk0k2XZonVST0kc3s2P82d2"
+      },
+      {
+        "name": "Isma",
+        "uid": "zR7TIr4geVPpMI1PO4BBUvrj9sp1"
+      },
+      {
+        "name": "Lucas",
+        "uid": "QHutFuxKvnUVXoekZZGMxHw5Bl12"
+      }
+    ],
+    "tasks": [
+      {
+        "accumulatedWeeks": 0,
+        "finalized": false,
+        "task": "PASILLO",
+        "user": 0
+      },
+      {
+        "accumulatedWeeks": 0,
+        "finalized": true,
+        "task": "COMEDOR",
+        "user": 1
+      },
+      {
+        "accumulatedWeeks": 0,
+        "finalized": true,
+        "task": "COCINA",
+        "user": 2
+      },
+      {
+        "accumulatedWeeks": 0,
+        "finalized": false,
+        "task": "COMPRAR",
+        "user": 3
+      }
+    ],
+    "week": 1708902000000
+  },
+  "version": {
+    "link": "https://github.com/SrFraki/task-sharing/releases/download/v1.4.1/co-task_v1.4.1.apk",
+    "version": "1.4.1"
+  }
+}

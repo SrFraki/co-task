@@ -5,6 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:task_sharing/config/router/router_notifier.dart';
 import 'package:task_sharing/features/auth/presentation/screens/auth_screen.dart';
+import 'package:task_sharing/features/editor/ui/screens/editor_screen.dart';
 import 'package:task_sharing/features/shared/presentation/screens/new_version_screen.dart';
 import 'package:task_sharing/features/tasks/presentation/providers/task_repository_provider.dart';
 import 'package:task_sharing/features/tasks/presentation/providers/tasks_provider.dart';
@@ -26,36 +27,31 @@ GoRouter router(RouterRef ref) {
         path: '/auth',
         pageBuilder: (context, state) => _pageBuilder(context, state, const AuthScreen()),
       ),
+
       GoRoute(
         path: '/',
-        pageBuilder: (context, state) => _pageBuilder(context, state, const TasksScreen()),
+        pageBuilder: (context, state) => _pageBuilder(context, state, TasksScreen()),
       ),
 
       GoRoute(
         path: '/new_version',
         pageBuilder: (context, state) => _pageBuilder(context, state, NewVersionScreen(state.uri.queryParameters['link'] ?? 'ERROR')),
       ),
+
+      GoRoute(
+        path: '/editor',
+        pageBuilder: (context, state) => _pageBuilder(context, state, EditorScreen()),
+      ),
     ],
     redirect: (context, state) async {
       final authStatus = routerNotifier.authStatus;
+      final link = routerNotifier.link;
 
       switch(authStatus){
-        case AuthStatus.loading: {
-          final version = await ref.read(taskRepositoryProvider).getVersion();
-          if(version != null){
-            final currentVersion = await PackageInfo.fromPlatform();
-            if(version.version != currentVersion.version){
-              FlutterNativeSplash.remove();
-              return Uri(path: '/new_version', queryParameters: {'link':version.link}).toString();
-            }
-          }
-          ref.read(authProvider);
-          ref.read(tasksPProvider.notifier).init();
-          return '/';
-        }
-        case AuthStatus.auth:{
-          return '/';
-        }
+        case AuthStatus.newVersion:
+          return Uri(path: '/new_version', queryParameters: {'link':link}).toString();
+        case AuthStatus.loading:
+        case AuthStatus.auth: return '/';
         case AuthStatus.notAuth:{
           return '/auth';
         }

@@ -1,10 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:task_sharing/features/shared/infrastructure/services/storage_service.dart';
+import 'package:task_sharing/features/tasks/domain/models/version.dart';
+import 'package:task_sharing/features/tasks/presentation/providers/task_repository_provider.dart';
 import 'package:task_sharing/features/tasks/presentation/providers/tasks_provider.dart';
 
 part 'auth_provider.g.dart';
@@ -13,32 +18,56 @@ part 'auth_provider.g.dart';
 class Auth extends _$Auth {
 
 // ignore: avoid_public_notifier_properties
-  late StoreServ storage;
+  late StoreServ<String> storage;
   
   @override
   AuthState build() {
     storage = StoreServ<String>(StoreType.auth);
-    storage.init().then((_) async {
-      await listenToAuth();
-      listen();
-    });
     return AuthState();
   }
 
-  Future<void> listenToAuth() async {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) async {
-      if(user == null){
-        if(state.status != AuthStatus.notAuth) logout();
-      }else{
-        state = state.copyWith(
-          status: AuthStatus.auth,
-          token: await user.getIdToken(true),
-          uid: user.uid,
-        );
-        storeInformation();
-      }
-    });
+  Future<void> init() async {
+    await storage.init();
+    
+    String? token = storage.read('token');
+    String? uid = storage.read('uid');
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if(token == null || uid == null || user == null){
+      logout();
+    }else{
+      state = state.copyWith(
+        status: AuthStatus.auth,
+        token: await user.getIdToken(),
+        uid: user.uid
+      );
+
+      await storeInformation();
+      _checkVersion();
+      ref.read(tasksPProvider.notifier).init();
+    }
+    
+    listen();
   }
+
+
+  Future<void> _checkVersion() async {
+    Version? version = await ref.read(taskRepositoryProvider).getVersion();
+    if(version != null){
+      PackageInfo currentVersion = await PackageInfo.fromPlatform();
+      if(version.version != currentVersion.version){
+        ref.invalidate(tasksPProvider);
+        state = state.copyWith(
+          status: AuthStatus.newVersion,
+          link: version.link
+        );
+        FlutterNativeSplash.remove();
+      }
+    }else{
+      logout();
+    }
+  }
+
 
   void listen() => ValueListenableBuilder<Box>(
     valueListenable: storage.getListenable('token'),
@@ -52,7 +81,6 @@ class Auth extends _$Auth {
 
 
   Future<void> signInWithGoogle() async {
-
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -75,7 +103,8 @@ class Auth extends _$Auth {
 
       // await requestPermission();
       ref.read(tasksPProvider.notifier).init();
-    } catch (_) {
+    } catch (e) {
+      log(e.toString());
       logout();
     }
 
@@ -96,7 +125,7 @@ class Auth extends _$Auth {
 
   Future<void> logout() async {
     await storage.deleteAll();
-    FirebaseAuth.instance.signOut();
+    await FirebaseAuth.instance.signOut();
     state = state.copyWith(status: AuthStatus.notAuth);
     FlutterNativeSplash.remove();
   }
@@ -108,22 +137,26 @@ class AuthState{
   AuthStatus status;
   String token;
   String uid;
+  String link;
 
   AuthState({
     this.status = AuthStatus.loading,
     this.token = '',
     this.uid = '',
+    this.link = ''
   });
 
   AuthState copyWith({
     AuthStatus? status,
     String? token,
     String? uid,
+    String? link,
     AuthCredential? credential
   }) => AuthState(
     status: status ?? this.status,
     token: token ?? this.token,
     uid: uid ?? this.uid,
+    link: link ?? this.link
   );
 }
 
@@ -131,5 +164,6 @@ class AuthState{
 enum AuthStatus{
   loading,
   auth,
-  notAuth
+  notAuth,
+  newVersion
 }

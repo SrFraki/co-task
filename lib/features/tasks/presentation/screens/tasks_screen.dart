@@ -2,20 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 import 'package:task_sharing/config/theme/theme.dart';
-import 'package:task_sharing/features/auth/presentation/providers/auth_provider.dart';
+import 'package:task_sharing/features/shared/presentation/widgets/are_you_sure.dart';
+import 'package:task_sharing/features/tasks/domain/models/task.dart';
 import 'package:task_sharing/features/tasks/presentation/providers/tasks_provider.dart';
 import 'package:task_sharing/features/tasks/presentation/widgets/task_card.dart';
 
+import '../widgets/tasks_drawer.dart';
 import '../widgets/user_task_info.dart';
 
 class TasksScreen extends ConsumerWidget {
    
-  const TasksScreen({Key? key}) : super(key: key);
+  TasksScreen({Key? key}) : super(key: key);
+
+  final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey();
   
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    final state = ref.watch(tasksPProvider);
+
     return Scaffold(
+      key: _scaffoldkey,
       appBar: AppBar(
+        leadingWidth: 0,
+        leading: const SizedBox(),
         title: const Text(
           'TAREAS',
           style: TextStyle(
@@ -25,10 +35,10 @@ class TasksScreen extends ConsumerWidget {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () => ref.read(authProvider.notifier).logout(),
-            icon: const Icon(Icons.logout_rounded),
-            iconSize: 27,
+          EndDrawerButton(
+            style: IconButton.styleFrom(
+              iconSize: 35
+            ),
           ),
           const SizedBox(width: 5)
         ],
@@ -36,9 +46,15 @@ class TasksScreen extends ConsumerWidget {
         backgroundColor: Colors.transparent,
       ),
       body: const TasksScreenView(),
+      endDrawerEnableOpenDragGesture: true,
+      drawerEdgeDragWidth: 100,
+
+      endDrawer: TasksDrawer(state: state, scaffoldkey: _scaffoldkey),
     );
   }
 }
+
+
 
 class TasksScreenView extends ConsumerStatefulWidget {
   const TasksScreenView({
@@ -59,9 +75,6 @@ class _TasksScreenViewState extends ConsumerState<TasksScreenView> {
     final state = ref.watch(tasksPProvider);
     final notifier = ref.read(tasksPProvider.notifier);
 
-    // final size = MediaQuery.of(context).size;
-    
-    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -83,7 +96,7 @@ class _TasksScreenViewState extends ConsumerState<TasksScreenView> {
             currentItem: page,
             count: state.ownTasks.length,
             unselectedColor: Colors.grey.shade400,
-            selectedColor: Colors.green.shade300
+            selectedColor: ATheme.green
           ),
     
         // const SizedBox(height: 60),
@@ -108,10 +121,11 @@ class _TasksScreenViewState extends ConsumerState<TasksScreenView> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                for(int i=0; i<state.tasks.length; i++)
+                for(Task task in state.tasks)
                   UsersTaskInfo(
-                    name: state.names[i],
-                    task: state.tasks[i]
+                    own: task.user == state.pos,
+                    name: state.names[task.user],
+                    task: task
                   ),
               ],
             ),

@@ -3,7 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ATheme{
-  static get darkMode{
+  static bool get darkMode{
     return SchedulerBinding.instance.platformDispatcher.platformBrightness == Brightness.dark;
   }
 
@@ -43,4 +43,10 @@ class ATheme{
       cardTheme: const CardTheme(surfaceTintColor: Color.fromARGB(255, 31, 31, 31))
     );
   }
+
+
+  static Color get green => darkMode ? const Color(0xFF738C74) : Colors.green.shade300;
+  static Color get cardColor => darkMode ? const Color(0xFF2B2B2B) : Colors.grey.shade200;
+  static Color get ownTaskCardColor => darkMode ? Colors.grey.shade800 : Colors.white;
+  static List<BoxShadow> get shadow => const [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 1, offset: Offset(3,3))];
 }
