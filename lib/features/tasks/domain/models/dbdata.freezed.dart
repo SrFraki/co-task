@@ -29,9 +29,9 @@ mixin _$DbData {
   @JsonKey(name: 'names')
   set names(List<Name> value) => throw _privateConstructorUsedError;
   @JsonKey(name: 'week')
-  int get week => throw _privateConstructorUsedError;
+  int get changeDay => throw _privateConstructorUsedError;
   @JsonKey(name: 'week')
-  set week(int value) => throw _privateConstructorUsedError;
+  set changeDay(int value) => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,7 +46,7 @@ abstract class $DbDataCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'tasks') List<Task> tasks,
       @JsonKey(name: 'names') List<Name> names,
-      @JsonKey(name: 'week') int week});
+      @JsonKey(name: 'week') int changeDay});
 }
 
 /// @nodoc
@@ -64,7 +64,7 @@ class _$DbDataCopyWithImpl<$Res, $Val extends DbData>
   $Res call({
     Object? tasks = null,
     Object? names = null,
-    Object? week = null,
+    Object? changeDay = null,
   }) {
     return _then(_value.copyWith(
       tasks: null == tasks
@@ -75,9 +75,9 @@ class _$DbDataCopyWithImpl<$Res, $Val extends DbData>
           ? _value.names
           : names // ignore: cast_nullable_to_non_nullable
               as List<Name>,
-      week: null == week
-          ? _value.week
-          : week // ignore: cast_nullable_to_non_nullable
+      changeDay: null == changeDay
+          ? _value.changeDay
+          : changeDay // ignore: cast_nullable_to_non_nullable
               as int,
     ) as $Val);
   }
@@ -93,7 +93,7 @@ abstract class _$$DbDataImplCopyWith<$Res> implements $DbDataCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'tasks') List<Task> tasks,
       @JsonKey(name: 'names') List<Name> names,
-      @JsonKey(name: 'week') int week});
+      @JsonKey(name: 'week') int changeDay});
 }
 
 /// @nodoc
@@ -109,7 +109,7 @@ class __$$DbDataImplCopyWithImpl<$Res>
   $Res call({
     Object? tasks = null,
     Object? names = null,
-    Object? week = null,
+    Object? changeDay = null,
   }) {
     return _then(_$DbDataImpl(
       tasks: null == tasks
@@ -120,9 +120,9 @@ class __$$DbDataImplCopyWithImpl<$Res>
           ? _value.names
           : names // ignore: cast_nullable_to_non_nullable
               as List<Name>,
-      week: null == week
-          ? _value.week
-          : week // ignore: cast_nullable_to_non_nullable
+      changeDay: null == changeDay
+          ? _value.changeDay
+          : changeDay // ignore: cast_nullable_to_non_nullable
               as int,
     ));
   }
@@ -134,7 +134,7 @@ class _$DbDataImpl implements _DbData {
   _$DbDataImpl(
       {@JsonKey(name: 'tasks') this.tasks = const [],
       @JsonKey(name: 'names') this.names = const [],
-      @JsonKey(name: 'week') this.week = 0});
+      @JsonKey(name: 'week') this.changeDay = 0});
 
   factory _$DbDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$DbDataImplFromJson(json);
@@ -147,11 +147,11 @@ class _$DbDataImpl implements _DbData {
   List<Name> names;
   @override
   @JsonKey(name: 'week')
-  int week;
+  int changeDay;
 
   @override
   String toString() {
-    return 'DbData(tasks: $tasks, names: $names, week: $week)';
+    return 'DbData(tasks: $tasks, names: $names, changeDay: $changeDay)';
   }
 
   @JsonKey(ignore: true)
@@ -172,7 +172,7 @@ abstract class _DbData implements DbData {
   factory _DbData(
       {@JsonKey(name: 'tasks') List<Task> tasks,
       @JsonKey(name: 'names') List<Name> names,
-      @JsonKey(name: 'week') int week}) = _$DbDataImpl;
+      @JsonKey(name: 'week') int changeDay}) = _$DbDataImpl;
 
   factory _DbData.fromJson(Map<String, dynamic> json) = _$DbDataImpl.fromJson;
 
@@ -188,9 +188,9 @@ abstract class _DbData implements DbData {
   set names(List<Name> value);
   @override
   @JsonKey(name: 'week')
-  int get week;
+  int get changeDay;
   @JsonKey(name: 'week')
-  set week(int value);
+  set changeDay(int value);
   @override
   @JsonKey(ignore: true)
   _$$DbDataImplCopyWith<_$DbDataImpl> get copyWith =>

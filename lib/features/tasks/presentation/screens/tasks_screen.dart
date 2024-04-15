@@ -122,7 +122,9 @@ class _TasksScreenViewState extends ConsumerState<TasksScreenView> {
             child: Column(
               children: [
                 for(Task task in state.tasks)
-                  UsersTaskInfo(
+                  task.user == state.pos 
+                  ? const SizedBox()
+                  : UsersTaskInfo(
                     own: task.user == state.pos,
                     name: state.names[task.user],
                     task: task

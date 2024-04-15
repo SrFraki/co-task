@@ -49,7 +49,7 @@ class TasksP extends _$TasksP {
 
   _updateData(DbData data) async {
     final current = TimeServ.now; //Current time
-    final dayOfChange = data.week; //Day of change
+    final dayOfChange = data.changeDay; //Day of change
 
     int pos = _getUserPos(data.names);
     List<Task> ownTasks = [], lastWeekTasks = [];
@@ -80,7 +80,7 @@ class TasksP extends _$TasksP {
         i++;
       }
 
-      data.week = TimeServ.nextDayOfChange(dayOfChange);
+      data.changeDay = TimeServ.nextDayOfChange(dayOfChange);
 
       final done = await ref.read(taskRepositoryProvider).updateData(data);
       if(!done){
