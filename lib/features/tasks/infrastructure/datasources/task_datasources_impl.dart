@@ -35,6 +35,9 @@ class TaskDatasourceImpl {
 
   Future<bool> updateData(DbData data) async {
     try {
+      int changeDay = (await _dio.get('/change_day.json')).data;
+      if(changeDay != -1) return false;
+
       await _dio.patch(
         '/.json',
         data: data.toJson()
@@ -44,6 +47,20 @@ class TaskDatasourceImpl {
       return false;
     }
   } 
+
+
+  Future<bool?> changeRequest() async {
+    try{
+      int changeDay = (await _dio.get('/change_day.json')).data;
+      if(changeDay < 0) return false;
+
+      await _dio.patch('/change-day.json', data: -1);
+      return true;
+    }catch(_){
+      return null;
+    }
+  }
+
 
 
   Future<Version?> getVersion() async {
