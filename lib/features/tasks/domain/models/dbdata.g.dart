@@ -15,14 +15,14 @@ _$DbDataImpl _$$DbDataImplFromJson(Map<String, dynamic> json) => _$DbDataImpl(
               ?.map((e) => Name.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      changeDay: json['week'] as int? ?? 0,
+      changeDay: json['changeDay'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$DbDataImplToJson(_$DbDataImpl instance) =>
     <String, dynamic>{
       'tasks': instance.tasks,
       'names': instance.names,
-      'week': instance.changeDay,
+      'changeDay': instance.changeDay,
     };
 
 _$NameImpl _$$NameImplFromJson(Map<String, dynamic> json) => _$NameImpl(

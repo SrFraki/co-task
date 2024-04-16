@@ -47,7 +47,7 @@ class TasksDrawer extends ConsumerWidget {
                   children: [
                     for(Task task in state.lastWeekTasks)
                       UsersTaskInfo(
-                        own: state.pos == task.user,
+                        own: state.user == task.user,
                         name: state.names[task.user],
                         task: task
                       ),

@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:task_sharing/config/router/router_notifier.dart';
 import 'package:task_sharing/features/auth/presentation/screens/auth_screen.dart';
 import 'package:task_sharing/features/editor/ui/screens/editor_screen.dart';
 import 'package:task_sharing/features/shared/presentation/screens/new_version_screen.dart';
-import 'package:task_sharing/features/tasks/presentation/providers/task_repository_provider.dart';
-import 'package:task_sharing/features/tasks/presentation/providers/tasks_provider.dart';
 import 'package:task_sharing/features/tasks/presentation/screens/tasks_screen.dart';
 
 import '../../features/auth/presentation/providers/auth_provider.dart';

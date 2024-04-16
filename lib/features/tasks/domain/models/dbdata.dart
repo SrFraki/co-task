@@ -9,7 +9,7 @@ class DbData with _$DbData {
   factory DbData({
     @JsonKey(name: 'tasks') @Default([]) List<Task> tasks,
     @JsonKey(name: 'names') @Default([]) List<Name> names,
-    @JsonKey(name: 'week') @Default(0) int changeDay,
+    @JsonKey(name: 'changeDay') @Default(0) int changeDay,
   }) = _DbData;
 
   factory DbData.fromJson(Map<String, dynamic> json) => _$DbDataFromJson(json);

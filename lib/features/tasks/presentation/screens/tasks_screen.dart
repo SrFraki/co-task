@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 import 'package:task_sharing/config/theme/theme.dart';
-import 'package:task_sharing/features/shared/presentation/widgets/are_you_sure.dart';
 import 'package:task_sharing/features/tasks/domain/models/task.dart';
 import 'package:task_sharing/features/tasks/presentation/providers/tasks_provider.dart';
 import 'package:task_sharing/features/tasks/presentation/widgets/task_card.dart';
@@ -85,7 +84,7 @@ class _TasksScreenViewState extends ConsumerState<TasksScreenView> {
             onPageChanged: (value) => setState(() => page = value),
             itemCount: state.ownTasks.length,
             itemBuilder: (context, i) => TaskCard(
-              onTap: () => notifier.toggleIsCompleted(page),
+              onTap: () => notifier.toggleIsCompleted(i),
               task: state.ownTasks[i],
             ),
           ),
@@ -122,10 +121,9 @@ class _TasksScreenViewState extends ConsumerState<TasksScreenView> {
             child: Column(
               children: [
                 for(Task task in state.tasks)
-                  task.user == state.pos 
+                  task.user == state.user 
                   ? const SizedBox()
                   : UsersTaskInfo(
-                    own: task.user == state.pos,
                     name: state.names[task.user],
                     task: task
                   ),

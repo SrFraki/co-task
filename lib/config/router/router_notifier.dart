@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_sharing/features/auth/presentation/providers/auth_provider.dart';
-import 'package:task_sharing/features/tasks/presentation/providers/tasks_provider.dart';
 
 
 final routerNotifierProvider = Provider<RouterNotifier>((ref) {

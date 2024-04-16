@@ -9,7 +9,7 @@ class UsersTaskInfo extends StatelessWidget {
     super.key,
     required this.task,
     required this.name,
-    required this.own
+    this.own = false
   });
 
   final Task task;

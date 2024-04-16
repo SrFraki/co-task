@@ -28,9 +28,9 @@ mixin _$DbData {
   List<Name> get names => throw _privateConstructorUsedError;
   @JsonKey(name: 'names')
   set names(List<Name> value) => throw _privateConstructorUsedError;
-  @JsonKey(name: 'week')
+  @JsonKey(name: 'changeDay')
   int get changeDay => throw _privateConstructorUsedError;
-  @JsonKey(name: 'week')
+  @JsonKey(name: 'changeDay')
   set changeDay(int value) => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,7 +46,7 @@ abstract class $DbDataCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'tasks') List<Task> tasks,
       @JsonKey(name: 'names') List<Name> names,
-      @JsonKey(name: 'week') int changeDay});
+      @JsonKey(name: 'changeDay') int changeDay});
 }
 
 /// @nodoc
@@ -93,7 +93,7 @@ abstract class _$$DbDataImplCopyWith<$Res> implements $DbDataCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'tasks') List<Task> tasks,
       @JsonKey(name: 'names') List<Name> names,
-      @JsonKey(name: 'week') int changeDay});
+      @JsonKey(name: 'changeDay') int changeDay});
 }
 
 /// @nodoc
@@ -134,7 +134,7 @@ class _$DbDataImpl implements _DbData {
   _$DbDataImpl(
       {@JsonKey(name: 'tasks') this.tasks = const [],
       @JsonKey(name: 'names') this.names = const [],
-      @JsonKey(name: 'week') this.changeDay = 0});
+      @JsonKey(name: 'changeDay') this.changeDay = 0});
 
   factory _$DbDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$DbDataImplFromJson(json);
@@ -146,7 +146,7 @@ class _$DbDataImpl implements _DbData {
   @JsonKey(name: 'names')
   List<Name> names;
   @override
-  @JsonKey(name: 'week')
+  @JsonKey(name: 'changeDay')
   int changeDay;
 
   @override
@@ -172,7 +172,7 @@ abstract class _DbData implements DbData {
   factory _DbData(
       {@JsonKey(name: 'tasks') List<Task> tasks,
       @JsonKey(name: 'names') List<Name> names,
-      @JsonKey(name: 'week') int changeDay}) = _$DbDataImpl;
+      @JsonKey(name: 'changeDay') int changeDay}) = _$DbDataImpl;
 
   factory _DbData.fromJson(Map<String, dynamic> json) = _$DbDataImpl.fromJson;
 
@@ -187,9 +187,9 @@ abstract class _DbData implements DbData {
   @JsonKey(name: 'names')
   set names(List<Name> value);
   @override
-  @JsonKey(name: 'week')
+  @JsonKey(name: 'changeDay')
   int get changeDay;
-  @JsonKey(name: 'week')
+  @JsonKey(name: 'changeDay')
   set changeDay(int value);
   @override
   @JsonKey(ignore: true)

@@ -1,8 +1,6 @@
-import 'dart:html';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:task_sharing/features/auth/presentation/providers/auth_provider.dart';
 import 'package:task_sharing/features/shared/infrastructure/services/storage_service.dart';
@@ -29,36 +27,33 @@ class TasksP extends _$TasksP {
   void toggleIsCompleted(int pagePos){
     final value = !state.ownTasks[pagePos].finalized;
     state.ownTasks[pagePos].finalized = value;
-    state.tasks[state.ownTasks[pagePos].user].finalized = value;
+    //TODO! if value -> send notifications + remove periodic notification
+    //TODO! if !value -> set periodic notification
     ref.notifyListeners();
-    ref.read(taskRepositoryProvider).toggleComplete(state.pos, state.ownTasks[pagePos]);
+    ref.read(taskRepositoryProvider).toggleComplete(state.user, state.ownTasks[pagePos]);
   }
 
 
 
   int _getUserPos(List<Name> names){
-    int? pos = _storage.read('userPos');
-    if(pos == null){
+    int? user = _storage.read('userPos');
+    if(user == null){
       final uid = ref.read(authProvider).uid;
-      pos = names.indexWhere((e) => e.uid == uid);
-      if(pos != -1) _storage.write('userPos', pos);
+      user = names.indexWhere((e) => e.uid == uid);
+      if(user != -1) _storage.write('userPos', user);
     }
-    return pos;
+    return user;
   }
 
 
-  _updateData(DbData data) async {
+  void _updateData(DbData data) async {
     final current = TimeServ.now; //Current time
     final dayOfChange = data.changeDay; //Day of change
 
-    int pos = _getUserPos(data.names);
+    int user = _getUserPos(data.names);
     List<Task> ownTasks = [], lastWeekTasks = [];
 
-    if(current >= dayOfChange){ //Ha pasado el dia de cambio
-      ///TODO! Lanzar señal -> Solicitar peticion de cambios
-      ///db -> dayOfChange = -1
-      ///Si ya estaba en -1 -> Esperar los cambios
-      ///   Si tardan mas de 10s -> Realizar cambios
+    if(current >= dayOfChange){ 
       bool? changeRequestResp = await ref.read(taskRepositoryProvider).changeRequest();
       if(changeRequestResp == null) return; //! ERROR
       if(!changeRequestResp){
@@ -76,8 +71,7 @@ class TasksP extends _$TasksP {
             user: (task.user-1-task.accumulatedWeeks)%data.names.length
           );
         }
-        if(data.tasks[i].user == pos) ownTasks.add(data.tasks[i].copyWith(user: i));
-        i++;
+        if(data.tasks[i].user == user) ownTasks.add(data.tasks[i].copyWith(user: i++));
       }
 
       data.changeDay = TimeServ.nextDayOfChange(dayOfChange);
@@ -88,20 +82,20 @@ class TasksP extends _$TasksP {
         if(newData == null) return; //! ERROR
         return _updateData(newData);
       }
-      ///TODO! Lanzar señal -> Finalizar cambios
-      ///Si dbDayOfChange != -1 -> Anular cambios y solicitar datos de nuevo
-      ///db -> dayOfChange = nextDayOfChange + Realizar cambios
 
     }else{
-      for(int i=0; i<data.tasks.length; i++){
+      int length = data.tasks.length;
+      for(int i=0; i<length; i++){
         Task task = data.tasks[i];
-        if(task.user == pos){
+        if(task.user == user){
           ownTasks.add(task.copyWith(user: i));
-          data.tasks.removeAt(i);
+          if(!task.finalized){
+            //TODO! set periodic notification
+          }
         }
         lastWeekTasks.add(task.copyWith(
           finalized: task.accumulatedWeeks == 0,
-          user: (task.user+1+task.accumulatedWeeks)%data.tasks.length
+          user: (task.user+1+task.accumulatedWeeks)%length
         ));
       }
     }
@@ -110,7 +104,7 @@ class TasksP extends _$TasksP {
       names: data.names,
       tasks: data.tasks,
       ownTasks: ownTasks,
-      pos: pos,
+      user: user,
       lastWeekTasks: lastWeekTasks
     );
   }
@@ -127,15 +121,18 @@ class TasksP extends _$TasksP {
 
     ref.read(taskRepositoryProvider).listener().listen((event) {
       final String path = event['path'];
-      if(path == '/' && _waitingForChangesApplied) {
-        _waitingForChangesApplied = false;
-        _updateData(DbData.fromJson(event['path']));
+      if(path == '/') {
+        if(_waitingForChangesApplied){
+          _waitingForChangesApplied = false;
+          _updateData(DbData.fromJson(event['path']));
+        }
       } else {
-        final int pos = int.tryParse(path.split('/')[2]) ?? -1;
-        if(state.pos != pos){
+        final int? pos = int.tryParse(path.split('/')[2]);
+        if(pos != null && state.tasks[pos].user != state.user){
+        // if(state.pos != pos && pos != null){
           updateChanges(
             pos,
-            Task.fromJson(event['data'])
+            Task.fromJson(event['data']).finalized
           );
         }
       }
@@ -149,8 +146,8 @@ class TasksP extends _$TasksP {
   }
 
 
-  void updateChanges(int pos, Task task){
-    state.tasks[pos] = task;
+  void updateChanges(int pos, bool finalized){
+    state.tasks[pos].finalized = finalized;
     ref.notifyListeners();
   }
 
@@ -165,7 +162,7 @@ class TasksPState with _$TasksPState {
         @Default([]) List<Task> tasks,
         @Default([]) List<Task> ownTasks,
         @Default([]) List<Task> lastWeekTasks,
-        @Default(0) int pos
+        @Default(0) int user
     }) = _TasksPState;
 }
 

@@ -35,7 +35,7 @@ class TaskDatasourceImpl {
 
   Future<bool> updateData(DbData data) async {
     try {
-      int changeDay = (await _dio.get('/change_day.json')).data;
+      int changeDay = (await _dio.get('/changeDay.json')).data;
       if(changeDay != -1) return false;
 
       await _dio.patch(
@@ -51,12 +51,14 @@ class TaskDatasourceImpl {
 
   Future<bool?> changeRequest() async {
     try{
-      int changeDay = (await _dio.get('/change_day.json')).data;
+      final resp = (await _dio.get('/changeDay.json'));
+      int changeDay = resp.data;
       if(changeDay < 0) return false;
 
-      await _dio.patch('/change-day.json', data: -1);
+      await _dio.patch('/.json', data: {'changeDay': -1});
       return true;
-    }catch(_){
+    }catch(e){
+      log(e.toString());
       return null;
     }
   }
@@ -74,12 +76,12 @@ class TaskDatasourceImpl {
     try {
       final namesReq = _dio.get('/names.json');
       final tasksReq = _dio.get('/tasks.json');
-      final weekReq = _dio.get('/week.json');
+      final weekReq = _dio.get('/changeDay.json');
 
       return DbData.fromJson({
         'names': (await namesReq).data,
         'tasks': (await tasksReq).data,
-        'week': (await weekReq).data
+        'changeDay': (await weekReq).data
       });
     } catch (e) {
       log(e.toString());

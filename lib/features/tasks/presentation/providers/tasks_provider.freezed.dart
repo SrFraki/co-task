@@ -24,8 +24,8 @@ mixin _$TasksPState {
   set ownTasks(List<Task> value) => throw _privateConstructorUsedError;
   List<Task> get lastWeekTasks => throw _privateConstructorUsedError;
   set lastWeekTasks(List<Task> value) => throw _privateConstructorUsedError;
-  int get pos => throw _privateConstructorUsedError;
-  set pos(int value) => throw _privateConstructorUsedError;
+  int get user => throw _privateConstructorUsedError;
+  set user(int value) => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TasksPStateCopyWith<TasksPState> get copyWith =>
@@ -43,7 +43,7 @@ abstract class $TasksPStateCopyWith<$Res> {
       List<Task> tasks,
       List<Task> ownTasks,
       List<Task> lastWeekTasks,
-      int pos});
+      int user});
 }
 
 /// @nodoc
@@ -63,7 +63,7 @@ class _$TasksPStateCopyWithImpl<$Res, $Val extends TasksPState>
     Object? tasks = null,
     Object? ownTasks = null,
     Object? lastWeekTasks = null,
-    Object? pos = null,
+    Object? user = null,
   }) {
     return _then(_value.copyWith(
       names: null == names
@@ -82,9 +82,9 @@ class _$TasksPStateCopyWithImpl<$Res, $Val extends TasksPState>
           ? _value.lastWeekTasks
           : lastWeekTasks // ignore: cast_nullable_to_non_nullable
               as List<Task>,
-      pos: null == pos
-          ? _value.pos
-          : pos // ignore: cast_nullable_to_non_nullable
+      user: null == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
               as int,
     ) as $Val);
   }
@@ -103,7 +103,7 @@ abstract class _$$TasksPStateImplCopyWith<$Res>
       List<Task> tasks,
       List<Task> ownTasks,
       List<Task> lastWeekTasks,
-      int pos});
+      int user});
 }
 
 /// @nodoc
@@ -121,7 +121,7 @@ class __$$TasksPStateImplCopyWithImpl<$Res>
     Object? tasks = null,
     Object? ownTasks = null,
     Object? lastWeekTasks = null,
-    Object? pos = null,
+    Object? user = null,
   }) {
     return _then(_$TasksPStateImpl(
       names: null == names
@@ -140,9 +140,9 @@ class __$$TasksPStateImplCopyWithImpl<$Res>
           ? _value.lastWeekTasks
           : lastWeekTasks // ignore: cast_nullable_to_non_nullable
               as List<Task>,
-      pos: null == pos
-          ? _value.pos
-          : pos // ignore: cast_nullable_to_non_nullable
+      user: null == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
               as int,
     ));
   }
@@ -156,7 +156,7 @@ class _$TasksPStateImpl implements _TasksPState {
       this.tasks = const [],
       this.ownTasks = const [],
       this.lastWeekTasks = const [],
-      this.pos = 0});
+      this.user = 0});
 
   @override
   @JsonKey()
@@ -172,11 +172,11 @@ class _$TasksPStateImpl implements _TasksPState {
   List<Task> lastWeekTasks;
   @override
   @JsonKey()
-  int pos;
+  int user;
 
   @override
   String toString() {
-    return 'TasksPState(names: $names, tasks: $tasks, ownTasks: $ownTasks, lastWeekTasks: $lastWeekTasks, pos: $pos)';
+    return 'TasksPState(names: $names, tasks: $tasks, ownTasks: $ownTasks, lastWeekTasks: $lastWeekTasks, user: $user)';
   }
 
   @JsonKey(ignore: true)
@@ -192,7 +192,7 @@ abstract class _TasksPState implements TasksPState {
       List<Task> tasks,
       List<Task> ownTasks,
       List<Task> lastWeekTasks,
-      int pos}) = _$TasksPStateImpl;
+      int user}) = _$TasksPStateImpl;
 
   @override
   List<Name> get names;
@@ -207,8 +207,8 @@ abstract class _TasksPState implements TasksPState {
   List<Task> get lastWeekTasks;
   set lastWeekTasks(List<Task> value);
   @override
-  int get pos;
-  set pos(int value);
+  int get user;
+  set user(int value);
   @override
   @JsonKey(ignore: true)
   _$$TasksPStateImplCopyWith<_$TasksPStateImpl> get copyWith =>

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:task_sharing/config/theme/theme.dart';
-import 'package:task_sharing/features/tasks/domain/models/task.dart';
 import 'package:task_sharing/features/tasks/presentation/providers/tasks_provider.dart';
 import 'package:task_sharing/features/tasks/presentation/widgets/custom_button.dart';
 
