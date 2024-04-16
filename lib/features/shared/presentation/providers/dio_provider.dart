@@ -2,17 +2,18 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hive/hive.dart';
 import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
 import 'package:task_sharing/features/shared/infrastructure/services/storage_service.dart';
 
 class DioServ{
-  StoreServ<String>? _storage;
+  Box<String>? _storage;
   late Dio dio;
   String? _token;
 
   DioServ(){
-    _storage = StoreServ<String>(StoreType.auth);
+    _storage = StorageServ.getBox<String>(StorageType.auth);
     dio = Dio(
       BaseOptions(
         baseUrl: 'https://task-share-fec6e-default-rtdb.europe-west1.firebasedatabase.app/',
@@ -40,11 +41,10 @@ class DioServ{
             //TODO!!
           }
           if(error.response?.statusCode == 401){
-            await _storage!.init();
             final flag = await _refreshToken();
             if(!flag) return handler.reject(error);
 
-            await _storage!.write('token', _token);
+            await _storage!.put('token', _token!);
             final options = error.response!.requestOptions..queryParameters['auth'] = _token;
             final response = await dio.fetch(options);
             return handler.resolve(response);
@@ -58,8 +58,7 @@ class DioServ{
 
   Future<void> _onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     if(_token == null){
-      await _storage!.init();
-      _token = _storage!.read('token');
+      _token = _storage!.get('token');
       if(_token == null){
         final flag = await _refreshToken();
         if(!flag) return handler.reject(DioException(requestOptions: options));
@@ -83,10 +82,10 @@ class DioServ{
   Future<bool> _refreshToken() async {
     _token = await FirebaseAuth.instance.currentUser?.getIdToken(true);
     if(_token == null){
-      await _storage!.deleteAll();
+      await _storage!.deleteAll(['token', 'uid']);
       return false;
     }
-    _storage!.write('token', _token);
+    _storage!.put('token', _token!);
     return true;
   }
 }

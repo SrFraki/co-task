@@ -28,10 +28,12 @@ Map<String, dynamic> _$$DbDataImplToJson(_$DbDataImpl instance) =>
 _$NameImpl _$$NameImplFromJson(Map<String, dynamic> json) => _$NameImpl(
       uid: json['uid'] as String? ?? '',
       name: json['name'] as String? ?? '',
+      token: json['token'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$NameImplToJson(_$NameImpl instance) =>
     <String, dynamic>{
       'uid': instance.uid,
       'name': instance.name,
+      'token': instance.token,
     };

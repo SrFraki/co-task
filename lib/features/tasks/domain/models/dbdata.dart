@@ -17,11 +17,12 @@ class DbData with _$DbData {
 
 
 
-@freezed
+@unfreezed
 class Name with _$Name {
-  const factory Name({
+  factory Name({
     @JsonKey(name: 'uid') @Default('') String uid,
     @JsonKey(name: 'name') @Default('') String name,
+    @JsonKey(name: 'token') @Default('') String token
   }) = _Name;
 
   factory Name.fromJson(Map<String, dynamic> json) => _$NameFromJson(json);

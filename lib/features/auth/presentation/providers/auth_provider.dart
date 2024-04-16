@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/widgets.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,19 +17,16 @@ part 'auth_provider.g.dart';
 class Auth extends _$Auth {
 
 // ignore: avoid_public_notifier_properties
-  late StoreServ<String> storage;
+  late Box<String> storage;
   
   @override
-  AuthState build() {
-    storage = StoreServ<String>(StoreType.auth);
-    return AuthState();
-  }
+  AuthState build() => AuthState();
 
   Future<void> init() async {
-    await storage.init();
-    
-    String? token = storage.read('token');
-    String? uid = storage.read('uid');
+    storage = StorageServ.getBox<String>(StorageType.auth);
+
+    String? token = storage.get('token');
+    String? uid = storage.get('uid');
     User? user = FirebaseAuth.instance.currentUser;
 
     if(token == null || uid == null || user == null){
@@ -47,7 +43,7 @@ class Auth extends _$Auth {
       ref.read(tasksPProvider.notifier).init();
     }
     
-    listen();
+    // listen();
   }
 
 
@@ -69,15 +65,21 @@ class Auth extends _$Auth {
   }
 
 
-  void listen() => ValueListenableBuilder<Box>(
-    valueListenable: storage.getListenable('token'),
-    builder: (context, box, widget) {
-      if(box.get('token') == null){
-        logout();
-      }
-      return const SizedBox();
-    },
-  );
+  // void listen() => ValueListenableBuilder<Box>(
+  //   valueListenable: storage.getListenable('token'),
+  //   builder: (context, box, widget) {
+  //     if(box.get('token') == null){
+  //       logout();
+  //     }
+  //     return const SizedBox();
+  //   },
+  // );
+
+  void listen() async {
+    await for(BoxEvent e in storage.watch(key: 'token')){
+      if(e.deleted) logout();
+    }
+  }
 
 
   Future<void> signInWithGoogle() async {
@@ -100,8 +102,10 @@ class Auth extends _$Auth {
       );
 
       await storeInformation();
+      storage.put('notificationToken', userCredential.credential!.accessToken!);
 
       // await requestPermission();
+
       ref.read(tasksPProvider.notifier).init();
     } catch (e) {
       log(e.toString());
@@ -119,12 +123,12 @@ class Auth extends _$Auth {
 
 
   Future<void> storeInformation() async {
-    storage.write('token', state.token);
-    storage.write('uid', state.uid);
+    storage.put('token', state.token);
+    storage.put('uid', state.uid);
   }
 
   Future<void> logout() async {
-    await storage.deleteAll();
+    await storage.deleteAll(['token', 'uid']);
     await FirebaseAuth.instance.signOut();
     state = state.copyWith(status: AuthStatus.notAuth);
     FlutterNativeSplash.remove();

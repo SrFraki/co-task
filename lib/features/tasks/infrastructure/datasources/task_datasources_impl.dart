@@ -3,8 +3,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
+import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
 import 'package:task_sharing/features/tasks/domain/models/dbdata.dart';
 import 'package:task_sharing/features/tasks/domain/models/task.dart';
 import 'package:task_sharing/features/tasks/domain/models/version.dart';
@@ -110,5 +113,58 @@ class TaskDatasourceImpl {
       }
     } catch (_) {}
   }
+
+
+  void updateNotificationToken(int user, String token) async {
+    try{
+      await _dio.patch('/names/$user.json', data: {'token': token});
+    }catch(e){log(e.toString());}
+  }
+
+
+  Future<void> sendNotifications(String message, List<Name> names, String? token) async {
+
+    if(token == null) return;
+
+    Dio dio = Dio();
+    dio.options
+      ..queryParameters = {}
+      ..headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+    dio.interceptors.addAll([
+      TalkerDioLogger(
+        settings: const TalkerDioLoggerSettings(
+          printResponseMessage: true,
+          printResponseData: true,
+          printRequestHeaders: true,
+        )
+      ),
+    ]);
+
+    try{
+      await dio.post('https://www.googleapis.com/auth/firebase.messaging');
+    }catch(e){log(e.toString());}
+    
+
+    // for(Name name in names){
+    //   try{
+    //     await dio.post(
+    //       'https://fcm.googleapis.com/v1/projects/task-share-fec6e/messages:send',
+    //       data: {
+    //         "message":{
+    //           "token": name.token,
+    //           "notification":{
+    //             "title": "PRUEBA",
+    //             "body": message,
+    //           }
+    //         }
+    //       }
+    //     );
+    //   }catch(e){log(e.toString());}
+    // }
+  }
+
 
 }

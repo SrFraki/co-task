@@ -205,8 +205,16 @@ Name _$NameFromJson(Map<String, dynamic> json) {
 mixin _$Name {
   @JsonKey(name: 'uid')
   String get uid => throw _privateConstructorUsedError;
+  @JsonKey(name: 'uid')
+  set uid(String value) => throw _privateConstructorUsedError;
   @JsonKey(name: 'name')
   String get name => throw _privateConstructorUsedError;
+  @JsonKey(name: 'name')
+  set name(String value) => throw _privateConstructorUsedError;
+  @JsonKey(name: 'token')
+  String get token => throw _privateConstructorUsedError;
+  @JsonKey(name: 'token')
+  set token(String value) => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -219,7 +227,9 @@ abstract class $NameCopyWith<$Res> {
       _$NameCopyWithImpl<$Res, Name>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'uid') String uid, @JsonKey(name: 'name') String name});
+      {@JsonKey(name: 'uid') String uid,
+      @JsonKey(name: 'name') String name,
+      @JsonKey(name: 'token') String token});
 }
 
 /// @nodoc
@@ -237,6 +247,7 @@ class _$NameCopyWithImpl<$Res, $Val extends Name>
   $Res call({
     Object? uid = null,
     Object? name = null,
+    Object? token = null,
   }) {
     return _then(_value.copyWith(
       uid: null == uid
@@ -246,6 +257,10 @@ class _$NameCopyWithImpl<$Res, $Val extends Name>
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      token: null == token
+          ? _value.token
+          : token // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -259,7 +274,9 @@ abstract class _$$NameImplCopyWith<$Res> implements $NameCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'uid') String uid, @JsonKey(name: 'name') String name});
+      {@JsonKey(name: 'uid') String uid,
+      @JsonKey(name: 'name') String name,
+      @JsonKey(name: 'token') String token});
 }
 
 /// @nodoc
@@ -274,6 +291,7 @@ class __$$NameImplCopyWithImpl<$Res>
   $Res call({
     Object? uid = null,
     Object? name = null,
+    Object? token = null,
   }) {
     return _then(_$NameImpl(
       uid: null == uid
@@ -284,6 +302,10 @@ class __$$NameImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      token: null == token
+          ? _value.token
+          : token // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -291,37 +313,28 @@ class __$$NameImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$NameImpl implements _Name {
-  const _$NameImpl(
+  _$NameImpl(
       {@JsonKey(name: 'uid') this.uid = '',
-      @JsonKey(name: 'name') this.name = ''});
+      @JsonKey(name: 'name') this.name = '',
+      @JsonKey(name: 'token') this.token = ''});
 
   factory _$NameImpl.fromJson(Map<String, dynamic> json) =>
       _$$NameImplFromJson(json);
 
   @override
   @JsonKey(name: 'uid')
-  final String uid;
+  String uid;
   @override
   @JsonKey(name: 'name')
-  final String name;
+  String name;
+  @override
+  @JsonKey(name: 'token')
+  String token;
 
   @override
   String toString() {
-    return 'Name(uid: $uid, name: $name)';
+    return 'Name(uid: $uid, name: $name, token: $token)';
   }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$NameImpl &&
-            (identical(other.uid, uid) || other.uid == uid) &&
-            (identical(other.name, name) || other.name == name));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, uid, name);
 
   @JsonKey(ignore: true)
   @override
@@ -338,18 +351,28 @@ class _$NameImpl implements _Name {
 }
 
 abstract class _Name implements Name {
-  const factory _Name(
-      {@JsonKey(name: 'uid') final String uid,
-      @JsonKey(name: 'name') final String name}) = _$NameImpl;
+  factory _Name(
+      {@JsonKey(name: 'uid') String uid,
+      @JsonKey(name: 'name') String name,
+      @JsonKey(name: 'token') String token}) = _$NameImpl;
 
   factory _Name.fromJson(Map<String, dynamic> json) = _$NameImpl.fromJson;
 
   @override
   @JsonKey(name: 'uid')
   String get uid;
+  @JsonKey(name: 'uid')
+  set uid(String value);
   @override
   @JsonKey(name: 'name')
   String get name;
+  @JsonKey(name: 'name')
+  set name(String value);
+  @override
+  @JsonKey(name: 'token')
+  String get token;
+  @JsonKey(name: 'token')
+  set token(String value);
   @override
   @JsonKey(ignore: true)
   _$$NameImplCopyWith<_$NameImpl> get copyWith =>
