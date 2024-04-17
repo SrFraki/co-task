@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -88,6 +89,8 @@ class Auth extends _$Auth {
 
       final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
+      GoogleAuthProvider().addScope('https://www.googleapis.com/auth/firebase.messaging');
+
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken
@@ -100,6 +103,8 @@ class Auth extends _$Auth {
         token: userCredential.credential?.accessToken ?? '',
         uid: userCredential.user?.uid,
       );
+
+      FirebaseMessaging.instance.subscribeToTopic('0'); //TODO!! Cambiar, subscribirse al entrar al grupo
 
       await storeInformation();
       storage.put('notificationToken', userCredential.credential!.accessToken!);

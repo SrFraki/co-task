@@ -12,6 +12,9 @@ import 'package:task_sharing/features/tasks/domain/models/dbdata.dart';
 import 'package:task_sharing/features/tasks/domain/models/task.dart';
 import 'package:task_sharing/features/tasks/domain/models/version.dart';
 
+import 'package:googleapis_auth/auth_io.dart' as auth;
+
+
 class TaskDatasourceImpl {
 
   final Dio _dio;
@@ -115,55 +118,59 @@ class TaskDatasourceImpl {
   }
 
 
-  void updateNotificationToken(int user, String token) async {
+  // void updateNotificationToken(int user, String token) async {
+  //   try{
+  //     await _dio.patch('/names/$user.json', data: {'token': token});
+  //   }catch(e){log(e.toString());}
+  // }
+
+
+  Future<void> sendNotifications(String message, /**List<Name> names, String? token */) async {
+    final jsonCredentials = await rootBundle.loadString('assets/data/service-account.json');
+    final creeds = auth.ServiceAccountCredentials.fromJson(jsonCredentials);
+
+    final client = await auth.clientViaServiceAccount(
+      creeds, 
+      ['https://www.googleapis.com/auth/cloud-platform'],
+    );
+
     try{
-      await _dio.patch('/names/$user.json', data: {'token': token});
-    }catch(e){log(e.toString());}
-  }
-
-
-  Future<void> sendNotifications(String message, List<Name> names, String? token) async {
-
-    if(token == null) return;
-
-    Dio dio = Dio();
-    dio.options
-      ..queryParameters = {}
-      ..headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
-    dio.interceptors.addAll([
-      TalkerDioLogger(
-        settings: const TalkerDioLoggerSettings(
-          printResponseMessage: true,
-          printResponseData: true,
-          printRequestHeaders: true,
+      await client.post(
+        Uri.parse('https://fcm.googleapis.com/v1/projects/1084759771003/messages:send'),
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: jsonEncode({
+            'message': {
+              // 'token': name.token,
+              'topic':'0', ///TODO Substituir por [id] del grupo
+              'notification': {'title': 'Tarea completada', 'body': message}
+            },
+          }
         )
-      ),
-    ]);
+      );
 
-    try{
-      await dio.post('https://www.googleapis.com/auth/firebase.messaging');
     }catch(e){log(e.toString());}
-    
 
-    // for(Name name in names){
-    //   try{
-    //     await dio.post(
-    //       'https://fcm.googleapis.com/v1/projects/task-share-fec6e/messages:send',
-    //       data: {
-    //         "message":{
-    //           "token": name.token,
-    //           "notification":{
-    //             "title": "PRUEBA",
-    //             "body": message,
-    //           }
+    // try{
+
+    //     await client.post(
+    //       Uri.parse('https://fcm.googleapis.com/v1/projects/1084759771003/messages:send'),
+    //       headers: {
+    //         'content-type': 'application/json',
+    //       },
+    //       body: jsonEncode({
+    //           'message': {
+    //             // 'token': name.token,
+    //             'topic':'0',
+    //             'notification': {'title': 'PRUEBA', 'body': message}
+    //           },
     //         }
-    //       }
+    //       )
     //     );
+
     //   }catch(e){log(e.toString());}
-    // }
+
   }
 
 

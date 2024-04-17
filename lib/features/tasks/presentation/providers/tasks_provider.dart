@@ -47,8 +47,7 @@ class TasksP extends _$TasksP {
       
       ref.read(taskRepositoryProvider).sendNotifications(
         '${state.names[state.user].name} ha completado su tarea: ${state.ownTasks[pagePos].task}', 
-        state.names,
-        StorageServ.getBox<String>(StorageType.auth).get('notificationToken')
+        // state.names,
       );
     }else{
       _notis.setPeriodicNotificiation(pagePos);
@@ -67,13 +66,13 @@ class TasksP extends _$TasksP {
       if(user != -1) _storage.put('userPos', user);
     }
 
-    Future(() async {
-      String? token = await FirebaseMessaging.instance.getToken();
-      if(token != null && names[user!].token != token){
-        ref.read(taskRepositoryProvider).updateNotificationToken(user, token);
-        names[user].token = token;
-      }
-    });
+    // Future(() async {
+    //   String? token = await FirebaseMessaging.instance.getToken();
+    //   if(token != null && names[user!].token != token){
+    //     ref.read(taskRepositoryProvider).updateNotificationToken(user, token);
+    //     names[user].token = token;
+    //   }
+    // });
 
     return user;
   }
