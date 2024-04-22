@@ -10,7 +10,7 @@ class TimeServ{
 
   static DateTime toDateTime(int time){
     return DateTime(
-      time >> 20 + 2000,
+      (time >> 20) + 2000,
       (time >> 16) & 0xF,
       (time >> 11) & 0X1F,
       (time >> 6) & 0x1F,
