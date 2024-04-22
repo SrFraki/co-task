@@ -103,7 +103,8 @@ class TasksP extends _$TasksP {
             user: (task.user-1-task.accumulatedWeeks)%data.names.length
           );
         }
-        if(data.tasks[i].user == user) ownTasks.add(data.tasks[i].copyWith(user: i++));
+        if(data.tasks[i].user == user) ownTasks.add(data.tasks[i].copyWith(user: i));
+        i++;
       }
 
       data.changeDay = TimeServ.nextDayOfChange(dayOfChange);
